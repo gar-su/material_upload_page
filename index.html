@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上传素材弹窗</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        /* 弹窗容器 */
+        .modal-wrap {
+            width: 920px;
+            background: #fff;
+            border-radius: 6px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+        .modal-header {
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e6e6e6;
+        }
+        .modal-title {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+        .close-btn {
+            width: 24px;
+            height: 24px;
+            border: none;
+            background: transparent;
+            font-size: 20px;
+            color: #999;
+            cursor: pointer;
+        }
+        .modal-body {
+            padding: 20px;
+        }
+        .form-item {
+            margin-bottom: 18px;
+            display: flex;
+            align-items: flex-start;
+        }
+        .form-label {
+            width: 160px;
+            padding-top: 8px;
+            font-size: 14px;
+            color: #333;
+        }
+        .form-label span {
+            color: #f53f3f;
+        }
+        .form-content {
+            flex: 1;
+        }
+        .select-path-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .select-btn {
+            background: #409eff;
+            color: #fff;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .path-text {
+            font-size: 14px;
+            color: #666;
+        }
+        .create-folder-link {
+            color: #409eff;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .input-default {
+            width: 100%;
+            height: 36px;
+            border: 1px solid #dcdcdc;
+            border-radius: 4px;
+            padding: 0 12px;
+            font-size: 14px;
+            color: #999;
+        }
+        .textarea-default {
+            width: 100%;
+            height: 72px;
+            border: 1px solid #dcdcdc;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 14px;
+            color: #999;
+            resize: none;
+        }
+        /* 上传区域标签栏 */
+        .upload-tab-bar {
+            display: flex;
+            border-bottom: 1px solid #e6e6e6;
+            margin-bottom: 12px;
+        }
+        .tab-item {
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            position: relative;
+        }
+        .tab-item.active {
+            color: #333;
+        }
+        .tab-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #409eff;
+        }
+        .red-text {
+            color: #f53f3f;
+        }
+        /* 拖拽上传区域 */
+        .upload-drop-area {
+            border: 1px dashed #dcdcdc;
+            border-radius: 4px;
+            height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #b3b3b3;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        .upload-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+            opacity: 0.6;
+        }
+        /* 上传操作按钮组 */
+        .upload-btn-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .small-btn {
+            padding: 5px 12px;
+            border: 1px solid #dcdcdc;
+            background: #fff;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .help-icon {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 1px solid #ccc;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            color: #999;
+            cursor: pointer;
+        }
+        /* 上传状态标签 */
+        .status-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 10px;
+        }
+        .status-tab {
+            padding: 4px 10px;
+            font-size: 13px;
+            border: 1px solid #e6e6e6;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .status-tab.active {
+            background: #409eff;
+            color: #fff;
+            border-color: #409eff;
+        }
+        /* 文件列表表格 */
+        .file-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .file-table th {
+            text-align: left;
+            padding: 8px 6px;
+            color: #666;
+            font-weight: normal;
+            border-bottom: 1px solid #e6e6e6;
+        }
+        .file-table td {
+            padding: 10px 6px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+        .file-preview-img {
+            width: 36px;
+            height: 36px;
+            object-fit: cover;
+            border-radius: 2px;
+        }
+        .del-btn {
+            color: #f53f3f;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 16px;
+        }
+        /* 底部按钮区 */
+        .modal-footer {
+            padding: 16px 20px;
+            border-top: 1px solid #e6e6e6;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        .footer-btn {
+            padding: 7px 18px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .btn-cancel {
+            background: #fff;
+            border: 1px solid #dcdcdc;
+            color: #333;
+        }
+        .btn-finish {
+            background: #409eff;
+            border: none;
+            color: #fff;
+        }
+        /* 遮罩层 */
+        .modal-mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-mask[hidden] {
+            display: none;
+        }
+        .modal-wrap.modal-small {
+            width: 480px;
+        }
+        /* 弹窗内完整下拉 */
+        .select-full {
+            width: 100%;
+            height: 36px;
+            border: 1px solid #dcdcdc;
+            border-radius: 4px;
+            padding: 0 12px;
+            font-size: 14px;
+            color: #333;
+            background: #fff;
+        }
+        .select-full:disabled {
+            background: #f5f7fa;
+            color: #999;
+        }
+        /* 短剧绑定单元格 */
+        .drama-bind {
+            font-size: 13px;
+            color: #409eff;
+            cursor: pointer;
+        }
+        .drama-bind.bound {
+            color: #333;
+        }
+        .drama-bind.bound::after {
+            content: ' ✎ 重选';
+            color: #409eff;
+            font-size: 12px;
+        }
+        .warn-text {
+            font-size: 14px;
+            color: #333;
+            line-height: 22px;
+        }
+        .warn-text .warn-count {
+            color: #f53f3f;
+        }
+    </style>
+</head>
+<body>
+    <div class="modal-wrap">
+        <div class="modal-header">
+            <div class="modal-title">上传素材</div>
+            <button class="close-btn">×</button>
+        </div>
+        <div class="modal-body">
+            <!-- 上传至路径 -->
+            <div class="form-item">
+                <div class="form-label"><span>*</span> 将素材上传至</div>
+                <div class="form-content">
+                    <div class="select-path-box">
+                        <button class="select-btn">请选择</button>
+                        <span class="path-text">PT_LA103_THE JANITOR: Rise of The Prime</span>
+                        <span class="create-folder-link">新建文件夹</span>
+                    </div>
+                </div>
+            </div>
+            <!-- 选择标签 -->
+            <div class="form-item">
+                <div class="form-label">选择标签</div>
+                <div class="form-content">
+                    <input type="text" class="input-default" placeholder="请选择标签">
+                </div>
+            </div>
+            <!-- 备注 -->
+            <div class="form-item">
+                <div class="form-label">备注</div>
+                <div class="form-content">
+                    <textarea class="textarea-default" placeholder="请输入备注"></textarea>
+                </div>
+            </div>
+            <!-- 上传区域标签 -->
+            <div class="upload-tab-bar">
+                <div class="tab-item active">上传区域</div>
+                <div class="tab-item"><span class="red-text">文件命名规则</span></div>
+            </div>
+            <!-- 拖拽上传区域 -->
+            <div class="upload-drop-area">
+                <div class="upload-icon">☁️</div>
+                <div>将文件或拖到此处，或点击上传文件</div>
+                <div style="margin-top:6px">仅支持图片和视频文件</div>
+            </div>
+            <!-- 上传按钮组 -->
+            <div class="upload-btn-group">
+                <button class="small-btn">文件夹上传</button>
+                <button class="small-btn">上传素材</button>
+                <span class="help-icon">?</span>
+            </div>
+            <!-- 上传状态切换 -->
+            <div class="status-tabs">
+                <div class="status-tab">上传中</div>
+                <div class="status-tab active">已上传</div>
+                <div class="status-tab">已上传 / 总上传 1 / 1</div>
+            </div>
+            <!-- 文件列表 -->
+            <table class="file-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>短剧信息</th>
+                        <th>尺寸</th>
+                        <th>大小</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <img src="https://picsum.photos/id/237/40/40" alt="预览图" class="file-preview-img">
+                            <span style="margin-left:8px">968_LIHE_EC_ID_LM017_260509_F_F_NU.mp4</span>
+                        </td>
+                        <td>
+                            <div class="drama-bind" data-row="0">待手动选择</div>
+                        </td>
+                        <td>1080 * 1920</td>
+                        <td>134MB</td>
+                        <td>
+                            <button class="del-btn">🗑</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button class="footer-btn btn-cancel">取消</button>
+            <button class="footer-btn btn-finish" id="finishUploadBtn">完成</button>
+        </div>
+    </div>
+
+    <!-- 选择短剧弹窗 -->
+    <div class="modal-mask" id="dramaModal" hidden>
+        <div class="modal-wrap modal-small">
+            <div class="modal-header">
+                <div class="modal-title">选择短剧</div>
+                <button class="close-btn" data-close-drama>×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-item">
+                    <div class="form-label"><span>*</span> 剧本信息</div>
+                    <div class="form-content">
+                        <select id="playSelect" class="select-full"></select>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <div class="form-label"><span>*</span> 语种</div>
+                    <div class="form-content">
+                        <select id="langSelect" class="select-full"></select>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <div class="form-label"><span>*</span> 短剧</div>
+                    <div class="form-content">
+                        <select id="dramaSelect" class="select-full" disabled></select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="footer-btn btn-cancel" data-close-drama>取消</button>
+                <button class="footer-btn btn-finish" id="confirmDramaBtn">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 未绑定短剧提示弹窗 -->
+    <div class="modal-mask" id="unboundModal" hidden>
+        <div class="modal-wrap modal-small">
+            <div class="modal-header">
+                <div class="modal-title">提示</div>
+                <button class="close-btn" data-close-unbound>×</button>
+            </div>
+            <div class="modal-body">
+                <div class="warn-text">有<span class="warn-count" id="unboundCount">0</span>个素材未绑定短剧，确认无视风险继续上传？</div>
+            </div>
+            <div class="modal-footer">
+                <button class="footer-btn btn-cancel" data-close-unbound>查看</button>
+                <button class="footer-btn btn-finish" id="forceUploadBtn">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== Mock 数据（后续接入真实接口时替换） =====
+        var MOCK_PLAYS = [
+            { id: 'LA001', name: 'THE JANITOR: Rise of The Prime' },
+            { id: 'LA002', name: 'Midnight Heist' },
+            { id: 'LA103', name: 'The Forgotten Crown' }
+        ];
+        var MOCK_LANGUAGES = ['English', 'Spanish', 'Portuguese', 'French'];
+        // 短剧 key: 剧本ID_语种
+        var MOCK_DRAMAS = {
+            'LA001_English': ['JANITOR: S1', 'JANITOR: S2', 'JANITOR: The Prequel'],
+            'LA001_Spanish': ['JANITOR: S1 (ES)', 'JANITOR: S2 (ES)'],
+            'LA001_Portuguese': ['JANITOR: S1 (PT)'],
+            'LA001_French': ['JANITOR: S1 (FR)'],
+            'LA002_English': ['MIDNIGHT: S1', 'MIDNIGHT: S2'],
+            'LA002_Spanish': ['MIDNIGHT: S1 (ES)'],
+            'LA103_English': ['FORGOTTEN CROWN: S1'],
+            'LA103_Portuguese': ['FORGOTTEN CROWN: S1 (PT)']
+        };
+
+        // ===== DOM 引用 =====
+        var dramaModal = document.getElementById('dramaModal');
+        var unboundModal = document.getElementById('unboundModal');
+        var playSelect = document.getElementById('playSelect');
+        var langSelect = document.getElementById('langSelect');
+        var dramaSelect = document.getElementById('dramaSelect');
+        var editingRow = null;
+        // 记录每个文件行的绑定信息：row -> { playId, playName, lang, drama }
+        var bindMap = {};
+
+        // ===== 初始化下拉选项 =====
+        function initSelects() {
+            var playOpts = '<option value="">请选择剧本信息</option>';
+            MOCK_PLAYS.forEach(function (p) {
+                playOpts += '<option value="' + p.id + '">' + p.id + '-' + p.name + '</option>';
+            });
+            playSelect.innerHTML = playOpts;
+
+            var langOpts = '<option value="">请选择语种</option>';
+            MOCK_LANGUAGES.forEach(function (l) {
+                langOpts += '<option value="' + l + '">' + l + '</option>';
+            });
+            langSelect.innerHTML = langOpts;
+
+            dramaSelect.innerHTML = '<option value="">请先选择剧本信息和语种</option>';
+        }
+
+        // ===== 打开选择短剧弹窗 =====
+        function openDramaModal(rowEl) {
+            editingRow = rowEl;
+            var idx = rowEl.getAttribute('data-row');
+            var prev = bindMap[idx];
+            playSelect.value = prev ? prev.playId : '';
+            langSelect.value = prev ? prev.lang : '';
+            refreshDramaOptions();
+            dramaSelect.value = prev ? prev.drama : '';
+            dramaModal.hidden = false;
+        }
+
+        // 剧本 / 语种变化 -> 刷新短剧下拉
+        function refreshDramaOptions() {
+            var key = playSelect.value + '_' + langSelect.value;
+            var list = MOCK_DRAMAS[key] || [];
+            if (playSelect.value && langSelect.value && list.length) {
+                dramaSelect.disabled = false;
+                var opts = '';
+                list.forEach(function (d) {
+                    opts += '<option value="' + d + '">' + d + '</option>';
+                });
+                dramaSelect.innerHTML = opts;
+                // 默认填入第一条匹配短剧
+                dramaSelect.value = list[0];
+            } else {
+                dramaSelect.disabled = true;
+                dramaSelect.value = '';
+                dramaSelect.innerHTML = '<option value="">无匹配短剧，请调整剧本和语种</option>';
+            }
+        }
+
+        // ===== 确定：回显绑定信息 =====
+        function confirmDrama() {
+            if (!playSelect.value || !langSelect.value || !dramaSelect.value) {
+                alert('请完整选择剧本信息、语种和短剧');
+                return;
+            }
+            var idx = editingRow.getAttribute('data-row');
+            var play = MOCK_PLAYS.filter(function (p) { return p.id === playSelect.value; })[0];
+            var info = {
+                playId: play.id,
+                playName: play.name,
+                lang: langSelect.value,
+                drama: dramaSelect.value
+            };
+            bindMap[idx] = info;
+            editingRow.textContent = play.id + '-' + play.name + '-' + langSelect.value + '-' + dramaSelect.value;
+            editingRow.classList.add('bound');
+            editingRow.title = '点击重新选择';
+            dramaModal.hidden = true;
+        }
+
+        // ===== 完成上传：检查未绑定素材 =====
+        function onFinishUpload() {
+            var rows = document.querySelectorAll('.drama-bind');
+            var unbound = [];
+            rows.forEach(function (row) {
+                if (!bindMap[row.getAttribute('data-row')]) {
+                    unbound.push(row);
+                }
+            });
+            if (unbound.length) {
+                document.getElementById('unboundCount').textContent = unbound.length;
+                unboundModal.hidden = false;
+                return;
+            }
+            // 全部已绑定，进入上传流程（此处为 mock 占位）
+            alert('全部素材已绑定短剧，开始上传');
+        }
+
+        // ===== 事件绑定 =====
+        document.querySelectorAll('.drama-bind').forEach(function (row) {
+            row.addEventListener('click', function () { openDramaModal(row); });
+        });
+        playSelect.addEventListener('change', refreshDramaOptions);
+        langSelect.addEventListener('change', refreshDramaOptions);
+        document.getElementById('confirmDramaBtn').addEventListener('click', confirmDrama);
+        document.querySelectorAll('[data-close-drama]').forEach(function (btn) {
+            btn.addEventListener('click', function () { dramaModal.hidden = true; });
+        });
+        document.querySelectorAll('[data-close-unbound]').forEach(function (btn) {
+            btn.addEventListener('click', function () { unboundModal.hidden = true; });
+        });
+        // 确认上传 -> 无视风险继续
+        document.getElementById('forceUploadBtn').addEventListener('click', function () {
+            unboundModal.hidden = true;
+            alert('确认无视风险继续上传');
+        });
+        // 主页面"完成"按钮
+        document.getElementById('finishUploadBtn').addEventListener('click', onFinishUpload);
+
+        initSelects();
+    </script>
+</body>
+</html>
