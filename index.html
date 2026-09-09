@@ -3,454 +3,1044 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>上传素材弹窗</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    <title>批量素材库</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1677ff',
+                        borderGray: '#e5e7eb',
+                        bgPage: '#f5f7fa',
+                        tagOrange: '#ffd591',
+                        tagGreen: '#b7eb8f',
+                        danger: '#f53f3f',
+                    },
+                    boxShadow: {
+                        modal: '0 2px 12px rgba(0,0,0,0.15)',
+                    },
+                }
+            }
         }
-        body {
-            background-color: #f5f7fa;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .scrollbar-thin {
+                scrollbar-width: thin;
+            }
+            .scrollbar-thin::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+            .scrollbar-thin::-webkit-scrollbar-thumb {
+                background-color: #ccc;
+                border-radius: 3px;
+            }
+            .tree-item::before {
+                content: "";
+                display: inline-block;
+                width: 14px;
+            }
         }
-        /* 弹窗容器 */
-        .modal-wrap {
-            width: 920px;
-            background: #fff;
-            border-radius: 6px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-            overflow: hidden;
-        }
-        .modal-header {
-            padding: 16px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #e6e6e6;
-        }
-        .modal-title {
-            font-size: 16px;
-            color: #333;
-            font-weight: 500;
-        }
-        .close-btn {
-            width: 24px;
-            height: 24px;
-            border: none;
-            background: transparent;
-            font-size: 20px;
-            color: #999;
-            cursor: pointer;
-        }
-        .modal-body {
-            padding: 20px;
-        }
-        .form-item {
-            margin-bottom: 18px;
-            display: flex;
-            align-items: flex-start;
-        }
-        .form-label {
-            width: 160px;
-            padding-top: 8px;
-            font-size: 14px;
-            color: #333;
-        }
-        .form-label span {
-            color: #f53f3f;
-        }
-        .form-content {
-            flex: 1;
-        }
-        .select-path-box {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .select-btn {
-            background: #409eff;
-            color: #fff;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-        .path-text {
-            font-size: 14px;
-            color: #666;
-        }
-        .create-folder-link {
-            color: #409eff;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        .input-default {
-            width: 100%;
-            height: 36px;
-            border: 1px solid #dcdcdc;
-            border-radius: 4px;
-            padding: 0 12px;
-            font-size: 14px;
-            color: #999;
-        }
-        .textarea-default {
-            width: 100%;
-            height: 72px;
-            border: 1px solid #dcdcdc;
-            border-radius: 4px;
-            padding: 8px 12px;
-            font-size: 14px;
-            color: #999;
-            resize: none;
-        }
-        /* 上传区域标签栏 */
-        .upload-tab-bar {
-            display: flex;
-            border-bottom: 1px solid #e6e6e6;
-            margin-bottom: 12px;
-        }
-        .tab-item {
-            padding: 8px 16px;
-            font-size: 14px;
-            cursor: pointer;
-            position: relative;
-        }
-        .tab-item.active {
-            color: #333;
-        }
-        .tab-item.active::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: #409eff;
-        }
-        .red-text {
-            color: #f53f3f;
-        }
-        /* 拖拽上传区域 */
-        .upload-drop-area {
-            border: 1px dashed #dcdcdc;
-            border-radius: 4px;
-            height: 220px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: #b3b3b3;
-            font-size: 14px;
-            margin-bottom: 16px;
-        }
-        .upload-icon {
-            font-size: 36px;
-            margin-bottom: 12px;
-            opacity: 0.6;
-        }
-        /* 上传操作按钮组 */
-        .upload-btn-group {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-        .small-btn {
-            padding: 5px 12px;
-            border: 1px solid #dcdcdc;
-            background: #fff;
-            border-radius: 4px;
-            font-size: 13px;
-            cursor: pointer;
-        }
-        .help-icon {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            border: 1px solid #ccc;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 12px;
-            color: #999;
-            cursor: pointer;
-        }
-        /* 上传状态标签 */
-        .status-tabs {
-            display: flex;
-            gap: 4px;
-            margin-bottom: 10px;
-        }
-        .status-tab {
-            padding: 4px 10px;
-            font-size: 13px;
-            border: 1px solid #e6e6e6;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        .status-tab.active {
-            background: #409eff;
-            color: #fff;
-            border-color: #409eff;
-        }
-        /* 文件列表表格 */
-        .file-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-        .file-table th {
-            text-align: left;
-            padding: 8px 6px;
-            color: #666;
-            font-weight: normal;
-            border-bottom: 1px solid #e6e6e6;
-        }
-        .file-table td {
-            padding: 10px 6px;
-            border-bottom: 1px solid #f0f0f0;
-            vertical-align: middle;
-        }
-        .file-preview-img {
-            width: 36px;
-            height: 36px;
-            object-fit: cover;
-            border-radius: 2px;
-        }
-        .del-btn {
-            color: #f53f3f;
-            cursor: pointer;
-            background: none;
-            border: none;
-            font-size: 16px;
-        }
-        /* 底部按钮区 */
-        .modal-footer {
-            padding: 16px 20px;
-            border-top: 1px solid #e6e6e6;
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-        }
-        .footer-btn {
-            padding: 7px 18px;
-            border-radius: 4px;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        .btn-cancel {
-            background: #fff;
-            border: 1px solid #dcdcdc;
-            color: #333;
-        }
-        .btn-finish {
-            background: #409eff;
-            border: none;
-            color: #fff;
-        }
-        /* 遮罩层 */
-        .modal-mask {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.4);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        .modal-mask[hidden] {
-            display: none;
-        }
-        .modal-wrap.modal-small {
-            width: 480px;
-        }
-        /* 弹窗内完整下拉 */
-        .select-full {
-            width: 100%;
-            height: 36px;
-            border: 1px solid #dcdcdc;
-            border-radius: 4px;
-            padding: 0 12px;
-            font-size: 14px;
-            color: #333;
-            background: #fff;
-        }
-        .select-full:disabled {
-            background: #f5f7fa;
-            color: #999;
-        }
-        /* 短剧绑定单元格 */
-        .drama-bind {
-            font-size: 13px;
-            color: #409eff;
-            cursor: pointer;
-        }
-        .drama-bind.bound {
-            color: #333;
-        }
-        .drama-bind.bound::after {
-            content: ' ✎ 重选';
-            color: #409eff;
-            font-size: 12px;
-        }
-        .warn-text {
-            font-size: 14px;
-            color: #333;
-            line-height: 22px;
-        }
-        .warn-text .warn-count {
-            color: #f53f3f;
+        @layer components {
+            /* ===== 素材库页面切换 ===== */
+            .lib-tab {
+                @apply px-3 py-2 border-b-2 border-transparent cursor-pointer hover:text-primary;
+            }
+            .lib-tab.active {
+                @apply border-primary text-primary font-medium;
+            }
+            .lib-page {
+                @apply flex-1 min-h-0 flex flex-col overflow-hidden;
+            }
+            /* @apply flex 会盖掉浏览器默认的 [hidden]{display:none}，需显式声明 */
+            .lib-page[hidden] {
+                display: none;
+            }
+            /* ===== 弹窗外壳 ===== */
+            .modal-mask {
+                @apply fixed inset-0 bg-black/40 flex items-center justify-center z-[1000];
+            }
+            /* @apply flex 会盖掉浏览器默认的 [hidden]{display:none}，需显式声明 */
+            .modal-mask[hidden] {
+                display: none;
+            }
+            .modal-panel {
+                @apply bg-white rounded-md shadow-modal flex flex-col max-h-[85vh];
+            }
+            .modal-close {
+                @apply w-6 h-6 text-xl leading-none text-gray-400 hover:text-gray-600;
+            }
+            /* ===== 表单 ===== */
+            .form-label {
+                @apply w-40 shrink-0 pt-2 text-sm text-gray-800;
+            }
+            .form-input {
+                @apply w-full h-9 border border-borderGray rounded px-3 text-sm text-gray-700 placeholder-gray-400;
+            }
+            .form-textarea {
+                @apply w-full h-[72px] border border-borderGray rounded px-3 py-2 text-sm text-gray-700 placeholder-gray-400 resize-none;
+            }
+            .select-full {
+                @apply w-full h-9 border border-borderGray rounded px-3 text-sm text-gray-800 bg-white;
+            }
+            .select-full:disabled {
+                @apply bg-bgPage text-gray-400;
+            }
+            .link-primary {
+                @apply text-primary cursor-pointer;
+            }
+            /* ===== 弹窗内上传区 ===== */
+            .upload-tab {
+                @apply px-4 py-2 text-sm cursor-pointer relative;
+            }
+            .upload-tab.active {
+                @apply text-gray-800 font-medium;
+            }
+            .upload-tab.active::after {
+                content: '';
+                @apply absolute -bottom-px left-0 w-full h-0.5 bg-primary;
+            }
+            .drop-area {
+                @apply border border-dashed border-borderGray rounded h-[220px] flex flex-col items-center justify-center text-gray-400 text-sm mb-4;
+            }
+            .btn-sm {
+                @apply px-3 py-1 border border-borderGray rounded bg-white text-[13px] hover:border-primary hover:text-primary;
+            }
+            .help-icon {
+                @apply w-[18px] h-[18px] rounded-full border border-gray-300 inline-flex items-center justify-center text-xs text-gray-400 cursor-pointer;
+            }
+            .status-tab {
+                @apply px-2.5 py-1 text-[13px] border border-borderGray rounded cursor-pointer;
+            }
+            .status-tab.active {
+                @apply bg-primary text-white border-primary;
+            }
+            /* ===== 文件表格 ===== */
+            .file-table {
+                @apply w-full border-collapse text-[13px];
+            }
+            .file-table th {
+                @apply text-left font-normal text-gray-600 p-2 border-b border-borderGray;
+            }
+            .file-table td {
+                @apply p-2.5 border-b border-gray-100 align-middle;
+            }
+            /* ===== 短剧绑定 ===== */
+            .drama-bind {
+                @apply text-[13px] text-primary cursor-pointer;
+            }
+            .drama-bind.bound {
+                @apply text-gray-800;
+            }
+            .drama-bind.bound::after {
+                content: ' ✎ 重选';
+                @apply text-primary text-xs;
+            }
+            .warn-text {
+                @apply text-sm text-gray-800 leading-[22px];
+            }
+            /* ===== 名称过长时的悬停浮层 ===== */
+            .name-tip {
+                @apply fixed z-[1200] bg-gray-900 text-white text-xs rounded px-2 py-1 whitespace-nowrap pointer-events-none;
+            }
+            /* ===== 弹窗底部按钮 ===== */
+            .btn-footer {
+                @apply px-[18px] py-[7px] rounded text-sm cursor-pointer;
+            }
+            .btn-cancel {
+                @apply bg-white border border-borderGray text-gray-800;
+            }
+            .btn-primary {
+                @apply bg-primary border border-primary text-white;
+            }
         }
     </style>
 </head>
-<body>
-    <div class="modal-wrap">
-        <div class="modal-header">
-            <div class="modal-title">上传素材</div>
-            <button class="close-btn">×</button>
+<body class="bg-bgPage text-gray-800 text-sm h-screen flex flex-col overflow-hidden">
+    <!-- 顶部Tab -->
+    <div class="bg-white border-b border-borderGray flex items-center px-4">
+        <div class="flex">
+            <div class="lib-tab">内部素材库</div>
+            <div class="lib-tab">外部素材库</div>
+            <div class="lib-tab">TT素材库</div>
+            <div class="lib-tab">海外素材库</div>
+            <div class="lib-tab active" data-page="batch">批量素材库</div>
+            <div class="lib-tab" data-page="ai">AI素材库</div>
         </div>
-        <div class="modal-body">
-            <!-- 上传至路径 -->
-            <div class="form-item">
-                <div class="form-label"><span>*</span> 将素材上传至</div>
-                <div class="form-content">
-                    <div class="select-path-box">
-                        <button class="select-btn">请选择</button>
-                        <span class="path-text">PT_LA103_THE JANITOR: Rise of The Prime</span>
-                        <span class="create-folder-link">新建文件夹</span>
+    </div>
+    <!-- 批量素材库 -->
+    <div id="page-batch" class="lib-page">
+    <!-- 筛选栏 -->
+    <div class="bg-white px-4 py-3 border-b border-borderGray flex flex-wrap items-center gap-2">
+        <div class="flex items-center">
+            <span>素材名称</span>
+            <input type="text" class="border border-borderGray rounded px-2 py-1 ml-1 w-40" placeholder="请输入素材名称">
+            <button class="border border-borderGray rounded px-2 py-1 ml-1"><i class="fa fa-search"></i></button>
+        </div>
+        <select class="border border-borderGray rounded px-2 py-1">
+            <option>选择用户</option>
+        </select>
+        <select class="border border-borderGray rounded px-2 py-1">
+            <option>选择语言</option>
+        </select>
+        <select class="border border-borderGray rounded px-2 py-1">
+            <option>请选择剧本</option>
+        </select>
+        <select class="border border-borderGray rounded px-2 py-1">
+            <option>请选择短剧</option>
+        </select>
+        <select class="border border-borderGray rounded px-2 py-1">
+            <option>请选择标签</option>
+        </select>
+        <div class="flex items-center">
+            <input type="text" class="border border-borderGray rounded px-2 py-1 w-28" placeholder="开始日期">
+            <span class="mx-1">→</span>
+            <input type="text" class="border border-borderGray rounded px-2 py-1 w-28" placeholder="结束日期">
+        </div>
+        <button class="bg-primary text-white rounded px-3 py-1">查询</button>
+    </div>
+    <!-- 主体区域：左侧树 + 右侧卡片 -->
+    <div class="flex flex-1 overflow-hidden">
+        <!-- 左侧素材树 -->
+        <div class="w-60 bg-white border-r border-borderGray overflow-y-auto scrollbar-thin p-2">
+            <div class="font-medium mb-2">麦芽传媒</div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> M14-SC-素材包
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> T小素材库
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> NM1914-中年被赶出…
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> 乐桃组禁止违规素材
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> 投放一部六组（方海）
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> PA638 PT
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> 免费素材乐桃组-8…
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> PA633-Reborn After…
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> 三部五组-未组侠
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> 三部五组-子期组
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> 素材一部三日共享文…
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> LA054 EN
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> NM1825-两界穿梭，女…
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> 江桥组小渠道谷歌素材
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> 江桥组小渠道SC素材
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> 海外素材三部7天共享…
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> 274-1
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> 274+331
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> 不允许投放
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> 投放一部三组（方海）
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> 投放一部二组（坠零）
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> 投放一部一组（雷恩）
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> BA5031-외계인 타이…
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> AI复刻素材for爽子
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> AI复刻素材for天儿
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> 朗悦传素材
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> P562 Horror Game:…
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> P554
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> 素材三部五组（IAA）
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> PA551 FR
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> 1
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> 8.3 A Werewolf Song…
+            </div>
+            <div class="tree-item py-1 pl-2 flex items-center">
+                <i class="fa fa-folder-o mr-1 text-yellow-500"></i> 8.3 A Werewolf Song…
+            </div>
+        </div>
+        <!-- 右侧主内容 -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- 操作按钮栏 -->
+            <div class="bg-white px-4 py-2 border-b border-borderGray flex items-center justify-between">
+                <div class="flex gap-2">
+                    <button id="uploadBtn" class="bg-primary text-white rounded px-3 py-1">上传素材</button>
+                    <button class="border border-borderGray rounded px-3 py-1">新建</button>
+                    <button class="border border-borderGray rounded px-3 py-1">设置权限</button>
+                    <button class="border border-borderGray rounded px-3 py-1">批量下载</button>
+                    <button class="border border-borderGray rounded px-3 py-1">批量设置标签</button>
+                    <button class="border border-borderGray rounded px-3 py-1">批量设置短剧</button>
+                    <button class="border border-borderGray rounded px-3 py-1">批量转移素材</button>
+                    <button class="border border-primary text-primary rounded px-3 py-1">标签管理</button>
+                    <button class="border border-borderGray rounded px-3 py-1">标签组管理</button>
+                </div>
+                <div class="text-primary cursor-pointer">刷新</div>
+            </div>
+            <!-- 素材列表信息 -->
+            <div class="px-4 py-1 text-gray-600">
+                <input type="checkbox"> 全选 已选0个素材 麦芽传媒（共2134559个素材）
+            </div>
+            <!-- 素材卡片网格 -->
+            <div class="flex-1 overflow-y-auto scrollbar-thin p-4">
+                <div class="grid grid-cols-5 gap-4">
+                    <!-- 素材卡片 1 -->
+                    <div class="bg-white rounded border border-borderGray overflow-hidden">
+                        <div class="relative">
+                            <input type="checkbox" class="absolute top-1 left-1 z-10">
+                            <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                <img src="https://picsum.photos/id/1005/200/144" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                        <i class="fa fa-play"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">无消耗</div>
+                            <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:03:38</div>
+                        </div>
+                        <div class="p-2">
+                            <div class="text-xs text-gray-600">1080 * 1920</div>
+                            <div class="text-xs text-purple-600">(Dublajli) Alleyi Yikan Sir</div>
+                            <div class="mt-2 flex justify-between">
+                                <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 素材卡片 2 -->
+                    <div class="bg-white rounded border border-borderGray overflow-hidden">
+                        <div class="relative">
+                            <input type="checkbox" class="absolute top-1 left-1 z-10">
+                            <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                <img src="https://picsum.photos/id/1070/200/144" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                        <i class="fa fa-play"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">无消耗</div>
+                            <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:02:44</div>
+                        </div>
+                        <div class="p-2">
+                            <div class="text-xs text-gray-600">1080 * 1920</div>
+                            <div class="text-xs text-purple-600">(Dublajli) Alleyi Yikan Sir</div>
+                            <div class="mt-2 flex justify-between">
+                                <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 素材卡片 3 -->
+                    <div class="bg-white rounded border border-borderGray overflow-hidden">
+                        <div class="relative">
+                            <input type="checkbox" class="absolute top-1 left-1 z-10">
+                            <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                <img src="https://picsum.photos/id/1048/200/144" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                        <i class="fa fa-play"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">无消耗</div>
+                            <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:21:15</div>
+                        </div>
+                        <div class="p-2">
+                            <div class="text-xs text-gray-600">1080 * 1920</div>
+                            <div class="text-xs text-purple-600">(Dublajli) Alleyi Yikan Sir</div>
+                            <div class="mt-2 flex justify-between">
+                                <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 素材卡片 4 -->
+                    <div class="bg-white rounded border border-borderGray overflow-hidden">
+                        <div class="relative">
+                            <input type="checkbox" class="absolute top-1 left-1 z-10">
+                            <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                <img src="https://picsum.photos/id/1027/200/144" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                        <i class="fa fa-play"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">无消耗</div>
+                            <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:06:47</div>
+                        </div>
+                        <div class="p-2">
+                            <div class="text-xs text-gray-600">1080 * 1920</div>
+                            <div class="text-xs text-purple-600">(Dublajli) Alleyi Yikan Sir</div>
+                            <div class="mt-2 flex justify-between">
+                                <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 素材卡片 5 -->
+                    <div class="bg-white rounded border border-borderGray overflow-hidden">
+                        <div class="relative">
+                            <input type="checkbox" class="absolute top-1 left-1 z-10">
+                            <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                <img src="https://picsum.photos/id/1060/200/144" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                        <i class="fa fa-play"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">无消耗</div>
+                            <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:22:05</div>
+                        </div>
+                        <div class="p-2">
+                            <div class="text-xs text-gray-600">1080 * 1920</div>
+                            <div class="text-xs text-purple-600">(Dublajli) Alleyi Yikan Sir</div>
+                            <div class="mt-2 flex justify-between">
+                                <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 第二行卡片继续复制上面结构即可 -->
+                    <div class="bg-white rounded border border-borderGray overflow-hidden">
+                        <div class="relative">
+                            <input type="checkbox" class="absolute top-1 left-1 z-10">
+                            <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                <img src="https://picsum.photos/id/1005/200/144" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                        <i class="fa fa-play"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">无消耗</div>
+                            <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:23:58</div>
+                        </div>
+                        <div class="p-2">
+                            <div class="text-xs text-gray-600">1080 * 1920</div>
+                            <div class="text-xs text-purple-600">(Dublajli) Alleyi Yikan Sir</div>
+                            <div class="mt-2 flex justify-between">
+                                <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded border border-borderGray overflow-hidden">
+                        <div class="relative">
+                            <input type="checkbox" class="absolute top-1 left-1 z-10">
+                            <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                <img src="https://picsum.photos/id/1071/200/144" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                        <i class="fa fa-play"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">无消耗</div>
+                            <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:23:13</div>
+                        </div>
+                        <div class="p-2">
+                            <div class="text-xs text-gray-600">1080 * 1920</div>
+                            <div class="text-xs text-purple-600">(Dublajli) Alleyi Yikan Sir</div>
+                            <div class="mt-2 flex justify-between">
+                                <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded border border-borderGray overflow-hidden">
+                        <div class="relative">
+                            <input type="checkbox" class="absolute top-1 left-1 z-10">
+                            <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                <img src="https://picsum.photos/id/1031/200/144" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                        <i class="fa fa-play"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">无消耗</div>
+                            <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:22:27</div>
+                        </div>
+                        <div class="p-2">
+                            <div class="text-xs text-gray-600">1080 * 1920</div>
+                            <div class="text-xs text-purple-600">(Dublajli) Alleyi Yikan Sir</div>
+                            <div class="mt-2 flex justify-between">
+                                <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded border border-borderGray overflow-hidden">
+                        <div class="relative">
+                            <input type="checkbox" class="absolute top-1 left-1 z-10">
+                            <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                <img src="https://picsum.photos/id/1011/200/144" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                        <i class="fa fa-play"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">无消耗</div>
+                            <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:03:01</div>
+                        </div>
+                        <div class="p-2">
+                            <div class="text-xs text-gray-600">1080 * 1920</div>
+                            <div class="text-xs text-purple-600">(Dublajli) Alleyi Yikan Sir</div>
+                            <div class="mt-2 flex justify-between">
+                                <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded border border-borderGray overflow-hidden">
+                        <div class="relative">
+                            <input type="checkbox" class="absolute top-1 left-1 z-10">
+                            <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                <img src="https://picsum.photos/id/1041/200/144" class="w-full h-full object-cover">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                        <i class="fa fa-play"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">无消耗</div>
+                            <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:21:39</div>
+                        </div>
+                        <div class="p-2">
+                            <div class="text-xs text-gray-600">1080 * 1920</div>
+                            <div class="text-xs text-purple-600">(Dublajli) Alleyi Yikan Sir</div>
+                            <div class="mt-2 flex justify-between">
+                                <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <!-- 选择标签 -->
-            <div class="form-item">
-                <div class="form-label">选择标签</div>
-                <div class="form-content">
-                    <input type="text" class="input-default" placeholder="请选择标签">
-                </div>
-            </div>
-            <!-- 备注 -->
-            <div class="form-item">
-                <div class="form-label">备注</div>
-                <div class="form-content">
-                    <textarea class="textarea-default" placeholder="请输入备注"></textarea>
-                </div>
-            </div>
-            <!-- 上传区域标签 -->
-            <div class="upload-tab-bar">
-                <div class="tab-item active">上传区域</div>
-                <div class="tab-item"><span class="red-text">文件命名规则</span></div>
-            </div>
-            <!-- 拖拽上传区域 -->
-            <div class="upload-drop-area">
-                <div class="upload-icon">☁️</div>
-                <div>将文件或拖到此处，或点击上传文件</div>
-                <div style="margin-top:6px">仅支持图片和视频文件</div>
-            </div>
-            <!-- 上传按钮组 -->
-            <div class="upload-btn-group">
-                <button class="small-btn">文件夹上传</button>
-                <button class="small-btn">上传素材</button>
-                <span class="help-icon">?</span>
-            </div>
-            <!-- 上传状态切换 -->
-            <div class="status-tabs">
-                <div class="status-tab">上传中</div>
-                <div class="status-tab active">已上传</div>
-                <div class="status-tab">已上传 / 总上传 1 / 1</div>
-            </div>
-            <!-- 文件列表 -->
-            <table class="file-table">
-                <thead>
-                    <tr>
-                        <th>名称</th>
-                        <th>短剧信息</th>
-                        <th>尺寸</th>
-                        <th>大小</th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <img src="https://picsum.photos/id/237/40/40" alt="预览图" class="file-preview-img">
-                            <span style="margin-left:8px">968_LIHE_EC_ID_LM017_260509_F_F_NU.mp4</span>
-                        </td>
-                        <td>
-                            <div class="drama-bind" data-row="0">待手动选择</div>
-                        </td>
-                        <td>1080 * 1920</td>
-                        <td>134MB</td>
-                        <td>
-                            <button class="del-btn">🗑</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
-        <div class="modal-footer">
-            <button class="footer-btn btn-cancel">取消</button>
-            <button class="footer-btn btn-finish" id="finishUploadBtn">完成</button>
+    </div>
+    </div>
+    <!-- AI素材库 -->
+    <div id="page-ai" class="lib-page" hidden>
+        <div class="flex flex-1 overflow-hidden">
+            <!-- 主内容 -->
+            <div class="flex-1 flex flex-col overflow-hidden">
+                <!-- 操作按钮栏 -->
+                <div class="bg-white px-4 py-2 border-b border-borderGray flex items-center justify-between">
+                    <div class="flex gap-2">
+                        <button id="syncBtn" class="bg-primary text-white rounded px-3 py-1">同步</button>
+                    </div>
+                    <div class="text-primary cursor-pointer">刷新</div>
+                </div>
+                <!-- 文件名搜索 -->
+                <div class="bg-white px-4 py-2 border-b border-borderGray flex items-center gap-2">
+                    <span>素材名称</span>
+                    <input type="text" id="aiSearch" class="border border-borderGray rounded px-2 py-1 w-60" placeholder="请输入素材名称">
+                    <button id="aiSearchBtn" class="border border-borderGray rounded px-2 py-1"><i class="fa fa-search"></i></button>
+                </div>
+                <!-- 素材列表信息 -->
+                <div class="px-4 py-1 text-gray-600">
+                    <input type="checkbox" id="aiSelectAll"> 全选 已选<span id="aiSelectedCount">0</span>个素材 AI创作平台（共<span id="aiVisibleCount">10</span>个素材）
+                </div>
+                <!-- 素材卡片网格 -->
+                <div class="flex-1 overflow-y-auto scrollbar-thin p-4">
+                    <div class="grid grid-cols-5 gap-4">
+                        <!-- AI 素材卡片 1 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="968_LIHE_EC_ID_LM017_260509_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1005/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:03:38</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="968_LIHE_EC_ID_LM017_260509_F_F_NU">968_LIHE_EC_ID_LM017_260509_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 2 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="895_QIKEYOU_EC_TR_P569_260909_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1070/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:02:44</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="895_QIKEYOU_EC_TR_P569_260909_FF_NU_Q">895_QIKEYOU_EC_TR_P569_260909_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 3 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1024_LIHE_EC_ID_LM018_260510_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1048/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:21:15</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1024_LIHE_EC_ID_LM018_260510_F_F_NU">1024_LIHE_EC_ID_LM018_260510_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 4 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="377_QIKEYOU_EC_TR_P570_260910_FF_NU_Q.mov">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1027/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:06:47</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="377_QIKEYOU_EC_TR_P570_260910_FF_NU_Q">377_QIKEYOU_EC_TR_P570_260910_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 5 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1560_LIHE_EC_ID_LM019_260511_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1060/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:22:05</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1560_LIHE_EC_ID_LM019_260511_F_F_NU">1560_LIHE_EC_ID_LM019_260511_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 6 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="42_QIKEYOU_EC_TR_P571_260911_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1071/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:23:58</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="42_QIKEYOU_EC_TR_P571_260911_FF_NU_Q">42_QIKEYOU_EC_TR_P571_260911_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 7 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="2310_LIHE_EC_ID_LM020_260512_F_F_NU.mov">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1031/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:23:13</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="2310_LIHE_EC_ID_LM020_260512_F_F_NU">2310_LIHE_EC_ID_LM020_260512_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 8 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="688_QIKEYOU_EC_TR_P572_260912_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1011/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:22:27</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="688_QIKEYOU_EC_TR_P572_260912_FF_NU_Q">688_QIKEYOU_EC_TR_P572_260912_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 9 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1105_LIHE_EC_ID_LM021_260513_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1041/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:03:01</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1105_LIHE_EC_ID_LM021_260513_F_F_NU">1105_LIHE_EC_ID_LM021_260513_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 10 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="204_QIKEYOU_EC_TR_P573_260913_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1055/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:21:39</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="204_QIKEYOU_EC_TR_P573_260913_FF_NU_Q">204_QIKEYOU_EC_TR_P573_260913_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- 选择短剧弹窗 -->
-    <div class="modal-mask" id="dramaModal" hidden>
-        <div class="modal-wrap modal-small">
-            <div class="modal-header">
-                <div class="modal-title">选择短剧</div>
-                <button class="close-btn" data-close-drama>×</button>
+    <!-- ========== 上传素材弹窗 ========== -->
+    <div class="modal-mask" id="uploadModal" hidden>
+        <div class="modal-panel w-[920px]">
+            <div class="px-5 py-4 flex items-center justify-between border-b border-borderGray">
+                <div class="text-base text-gray-800 font-medium">上传素材</div>
+                <button class="modal-close" data-close-upload>×</button>
             </div>
-            <div class="modal-body">
-                <div class="form-item">
-                    <div class="form-label"><span>*</span> 剧本信息</div>
-                    <div class="form-content">
+            <div class="p-5 overflow-y-auto scrollbar-thin">
+                <!-- 上传至路径 -->
+                <div class="mb-[18px] flex items-start">
+                    <div class="form-label"><span class="text-danger">*</span> 将素材上传至</div>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2.5">
+                            <button class="bg-primary text-white border-none rounded px-3.5 py-1.5 text-[13px]">请选择</button>
+                            <span class="text-sm text-gray-600">PT_LA103_THE JANITOR: Rise of The Prime</span>
+                            <span class="link-primary text-sm">新建文件夹</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 选择标签 -->
+                <div class="mb-[18px] flex items-start">
+                    <div class="form-label">选择标签</div>
+                    <div class="flex-1">
+                        <input type="text" class="form-input" placeholder="请选择标签">
+                    </div>
+                </div>
+                <!-- 备注 -->
+                <div class="mb-[18px] flex items-start">
+                    <div class="form-label">备注</div>
+                    <div class="flex-1">
+                        <textarea class="form-textarea" placeholder="请输入备注"></textarea>
+                    </div>
+                </div>
+                <!-- 上传区域标签 -->
+                <div class="flex border-b border-borderGray mb-3">
+                    <div class="upload-tab active">上传区域</div>
+                    <div class="upload-tab"><span class="text-danger">文件命名规则</span></div>
+                </div>
+                <!-- 拖拽上传区域 -->
+                <div class="drop-area">
+                    <div class="text-4xl mb-3 opacity-60">☁️</div>
+                    <div>将文件或拖到此处，或点击上传文件</div>
+                    <div class="mt-1.5">仅支持图片和视频文件</div>
+                </div>
+                <!-- 上传按钮组 -->
+                <div class="flex gap-2 mb-3">
+                    <button class="btn-sm">文件夹上传</button>
+                    <button class="btn-sm">上传素材</button>
+                    <span class="help-icon">?</span>
+                </div>
+                <!-- 上传状态切换 -->
+                <div class="flex gap-1 mb-2.5">
+                    <div class="status-tab">上传中</div>
+                    <div class="status-tab active">已上传</div>
+                    <div class="status-tab">已上传 / 总上传 1 / 1</div>
+                </div>
+                <!-- 文件列表 -->
+                <table class="file-table">
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>短剧信息</th>
+                            <th>尺寸</th>
+                            <th>大小</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="https://picsum.photos/id/237/40/40" alt="预览图" class="w-9 h-9 object-cover rounded-sm">
+                                <span class="ml-2">968_LIHE_EC_ID_LM017_260509_F_F_NU.mp4</span>
+                            </td>
+                            <td>
+                                <div class="drama-bind" data-row="0">待手动选择</div>
+                            </td>
+                            <td>1080 * 1920</td>
+                            <td>134MB</td>
+                            <td>
+                                <button class="del-btn text-danger text-base cursor-pointer">🗑</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="px-5 py-4 border-t border-borderGray flex justify-end gap-3">
+                <button class="btn-footer btn-cancel" data-close-upload>取消</button>
+                <button class="btn-footer btn-primary" id="finishUploadBtn">完成</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 选择短剧弹窗 ========== -->
+    <div class="modal-mask" id="dramaModal" hidden>
+        <div class="modal-panel w-[480px]">
+            <div class="px-5 py-4 flex items-center justify-between border-b border-borderGray">
+                <div class="text-base text-gray-800 font-medium">选择短剧</div>
+                <button class="modal-close" data-close-drama>×</button>
+            </div>
+            <div class="p-5">
+                <div class="mb-[18px] flex items-start">
+                    <div class="form-label"><span class="text-danger">*</span> 剧本信息</div>
+                    <div class="flex-1">
                         <select id="playSelect" class="select-full"></select>
                     </div>
                 </div>
-                <div class="form-item">
-                    <div class="form-label"><span>*</span> 语种</div>
-                    <div class="form-content">
+                <div class="mb-[18px] flex items-start">
+                    <div class="form-label"><span class="text-danger">*</span> 语种</div>
+                    <div class="flex-1">
                         <select id="langSelect" class="select-full"></select>
                     </div>
                 </div>
-                <div class="form-item">
-                    <div class="form-label"><span>*</span> 短剧</div>
-                    <div class="form-content">
+                <div class="flex items-start">
+                    <div class="form-label"><span class="text-danger">*</span> 短剧</div>
+                    <div class="flex-1">
                         <select id="dramaSelect" class="select-full" disabled></select>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="footer-btn btn-cancel" data-close-drama>取消</button>
-                <button class="footer-btn btn-finish" id="confirmDramaBtn">确定</button>
+            <div class="px-5 py-4 border-t border-borderGray flex justify-end gap-3">
+                <button class="btn-footer btn-cancel" data-close-drama>取消</button>
+                <button class="btn-footer btn-primary" id="confirmDramaBtn">确定</button>
             </div>
         </div>
     </div>
 
-    <!-- 未绑定短剧提示弹窗 -->
+    <!-- ========== 未绑定短剧提示弹窗 ========== -->
     <div class="modal-mask" id="unboundModal" hidden>
-        <div class="modal-wrap modal-small">
-            <div class="modal-header">
-                <div class="modal-title">提示</div>
-                <button class="close-btn" data-close-unbound>×</button>
+        <div class="modal-panel w-[480px]">
+            <div class="px-5 py-4 flex items-center justify-between border-b border-borderGray">
+                <div class="text-base text-gray-800 font-medium">提示</div>
+                <button class="modal-close" data-close-unbound>×</button>
             </div>
-            <div class="modal-body">
-                <div class="warn-text">有<span class="warn-count" id="unboundCount">0</span>个素材未绑定短剧，确认无视风险继续上传？</div>
+            <div class="p-5">
+                <div class="warn-text">有<span class="text-danger" id="unboundCount">0</span>个素材未绑定短剧，确认无视风险继续上传？</div>
             </div>
-            <div class="modal-footer">
-                <button class="footer-btn btn-cancel" data-close-unbound>查看</button>
-                <button class="footer-btn btn-finish" id="forceUploadBtn">确认</button>
+            <div class="px-5 py-4 border-t border-borderGray flex justify-end gap-3">
+                <button class="btn-footer btn-cancel" data-close-unbound>查看</button>
+                <button class="btn-footer btn-primary" id="forceUploadBtn">确认</button>
             </div>
         </div>
     </div>
+
+    <!-- ========== 同步素材弹窗 ========== -->
+    <div class="modal-mask" id="syncModal" hidden>
+        <div class="modal-panel w-[720px]">
+            <div class="px-5 py-4 flex items-center justify-between border-b border-borderGray">
+                <div class="text-base text-gray-800 font-medium">同步素材</div>
+                <button class="modal-close" data-close-sync>×</button>
+            </div>
+            <div class="p-5 overflow-y-auto scrollbar-thin">
+                <div class="text-sm text-gray-600 mb-4">已选 <span class="text-primary" id="syncCount">0</span> 个素材</div>
+                <!-- 首个素材名称 -->
+                <div class="mb-[18px] flex items-start">
+                    <div class="form-label"><span class="text-danger">*</span> 首个素材名称</div>
+                    <div class="flex-1">
+                        <input type="text" id="syncSeed" class="form-input" placeholder="请输入首个素材名称">
+                        <div class="mt-1 text-xs text-gray-400" id="syncSeedHint"></div>
+                    </div>
+                </div>
+                <!-- 同步至 -->
+                <div class="mb-[18px] flex items-start">
+                    <div class="form-label"><span class="text-danger">*</span> 同步至</div>
+                    <div class="flex-1">
+                        <select id="syncFolder" class="select-full"></select>
+                    </div>
+                </div>
+                <!-- 命名预览 -->
+                <div class="text-sm text-gray-800 mb-2">命名预览 <span class="text-xs text-gray-400 ml-1">（悬停查看完整名称）</span></div>
+                <table class="file-table">
+                    <thead>
+                        <tr>
+                            <th>原名称</th>
+                            <th>同步后名称</th>
+                        </tr>
+                    </thead>
+                    <tbody id="syncPreview"></tbody>
+                </table>
+            </div>
+            <div class="px-5 py-4 border-t border-borderGray flex justify-end gap-3">
+                <button class="btn-footer btn-cancel" data-close-sync>取消</button>
+                <button class="btn-footer btn-primary" id="confirmSyncBtn">确定同步</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 名称悬停浮层 -->
+    <div class="name-tip" id="nameTip" hidden></div>
 
     <script>
         // ===== Mock 数据（后续接入真实接口时替换） =====
@@ -473,6 +1063,7 @@
         };
 
         // ===== DOM 引用 =====
+        var uploadModal = document.getElementById('uploadModal');
         var dramaModal = document.getElementById('dramaModal');
         var unboundModal = document.getElementById('unboundModal');
         var playSelect = document.getElementById('playSelect');
@@ -497,6 +1088,15 @@
             langSelect.innerHTML = langOpts;
 
             dramaSelect.innerHTML = '<option value="">请先选择剧本信息和语种</option>';
+        }
+
+        // ===== 打开 / 关闭上传素材弹窗 =====
+        function openUploadModal() {
+            uploadModal.hidden = false;
+        }
+
+        function closeUploadModal() {
+            uploadModal.hidden = true;
         }
 
         // ===== 打开选择短剧弹窗 =====
@@ -571,6 +1171,10 @@
         }
 
         // ===== 事件绑定 =====
+        document.getElementById('uploadBtn').addEventListener('click', openUploadModal);
+        document.querySelectorAll('[data-close-upload]').forEach(function (btn) {
+            btn.addEventListener('click', closeUploadModal);
+        });
         document.querySelectorAll('.drama-bind').forEach(function (row) {
             row.addEventListener('click', function () { openDramaModal(row); });
         });
@@ -591,6 +1195,200 @@
         // 主页面"完成"按钮
         document.getElementById('finishUploadBtn').addEventListener('click', onFinishUpload);
 
+        // ===== AI素材库：同步目标文件夹（mock，取自批量素材库） =====
+        var MOCK_AI_FOLDERS = ['PA638 PT', 'M14-SC-素材包', 'T小素材库', '投放一部六组（方海）', '不允许投放'];
+
+        var syncModal = document.getElementById('syncModal');
+        var syncSeed = document.getElementById('syncSeed');
+        var syncSeedHint = document.getElementById('syncSeedHint');
+        var syncFolder = document.getElementById('syncFolder');
+        var syncPreview = document.getElementById('syncPreview');
+        var aiSelected = [];
+
+        // ===== 素材库页面切换 =====
+        var pageEls = {
+            batch: document.getElementById('page-batch'),
+            ai: document.getElementById('page-ai')
+        };
+        document.querySelectorAll('[data-page]').forEach(function (tab) {
+            tab.addEventListener('click', function () {
+                var key = tab.getAttribute('data-page');
+                Object.keys(pageEls).forEach(function (k) { pageEls[k].hidden = (k !== key); });
+                document.querySelectorAll('[data-page]').forEach(function (t) {
+                    t.classList.toggle('active', t === tab);
+                });
+            });
+        });
+
+        // ===== AI素材库：按文件名筛选 =====
+        function filterAiCards() {
+            var kw = document.getElementById('aiSearch').value.trim().toLowerCase();
+            var visible = 0;
+            document.querySelectorAll('.ai-card').forEach(function (card) {
+                var name = card.querySelector('.ai-pick').getAttribute('data-name').toLowerCase();
+                var hit = !kw || name.indexOf(kw) !== -1;
+                card.hidden = !hit;
+                if (hit) { visible++; }
+            });
+            document.getElementById('aiVisibleCount').textContent = visible;
+            updateAiSelection();
+        }
+
+        // ===== AI素材库：勾选计数 =====
+        function updateAiSelection() {
+            aiSelected = Array.prototype.slice.call(document.querySelectorAll('.ai-pick:checked'));
+            document.getElementById('aiSelectedCount').textContent = aiSelected.length;
+            var visiblePicks = [];
+            document.querySelectorAll('.ai-card').forEach(function (card) {
+                if (!card.hidden) { visiblePicks.push(card.querySelector('.ai-pick')); }
+            });
+            document.getElementById('aiSelectAll').checked = visiblePicks.length > 0 && visiblePicks.every(function (cb) {
+                return cb.checked;
+            });
+        }
+
+        // 全选只作用于当前可见（筛选后）的素材
+        document.getElementById('aiSelectAll').addEventListener('change', function () {
+            var checked = this.checked;
+            document.querySelectorAll('.ai-card').forEach(function (card) {
+                if (card.hidden) { return; }
+                card.querySelector('.ai-pick').checked = checked;
+            });
+            updateAiSelection();
+        });
+
+        document.querySelectorAll('.ai-pick').forEach(function (cb) {
+            cb.addEventListener('change', updateAiSelection);
+        });
+
+        document.getElementById('aiSearchBtn').addEventListener('click', filterAiCards);
+
+        // ===== 名称递增：取第一个数字段 =====
+        function findSeedSegment(name) {
+            var m = name.match(/\d+/);
+            return m ? { text: m[0], index: m.index, length: m[0].length } : null;
+        }
+
+        function buildSyncedName(seed, seg, step) {
+            var num = String(parseInt(seg.text, 10) + step);
+            while (num.length < seg.length) { num = '0' + num; }
+            return seed.slice(0, seg.index) + num + seed.slice(seg.index + seg.length);
+        }
+
+        function stripExt(name) {
+            var i = name.lastIndexOf('.');
+            return i > 0 ? name.slice(0, i) : name;
+        }
+
+        // ===== 命名预览 =====
+        function renderSyncPreview() {
+            var seed = syncSeed.value.trim();
+            var seg = findSeedSegment(seed);
+            if (!seed) {
+                syncSeedHint.textContent = '请输入首个素材名称';
+                syncSeedHint.className = 'mt-1 text-xs text-gray-400';
+            } else if (!seg) {
+                syncSeedHint.textContent = '名称中未识别到数字段，无法递增';
+                syncSeedHint.className = 'mt-1 text-xs text-danger';
+            } else {
+                var base = parseInt(seg.text, 10);
+                syncSeedHint.textContent = '识别递增段：' + seg.text + ' → ' + (base + 1) + '、' + (base + 2) + '…';
+                syncSeedHint.className = 'mt-1 text-xs text-gray-400';
+            }
+            if (!aiSelected.length) {
+                syncPreview.innerHTML = '';
+                return;
+            }
+            var origin = stripExt(aiSelected[0].getAttribute('data-name'));
+            var next = seg ? buildSyncedName(seed, seg, 0) : '—';
+            syncPreview.innerHTML = '<tr>' +
+                '<td><div class="truncate max-w-[280px]" data-full-name="' + origin + '">' + origin + '</div></td>' +
+                '<td class="text-primary"><div class="truncate max-w-[280px]" data-full-name="' + next + '">' + next + '</div></td>' +
+                '</tr>';
+        }
+
+        syncSeed.addEventListener('input', renderSyncPreview);
+
+        // ===== 打开 / 关闭同步弹窗 =====
+        function openSyncModal() {
+            updateAiSelection();
+            if (!aiSelected.length) {
+                alert('请先选择素材');
+                return;
+            }
+            document.getElementById('syncCount').textContent = aiSelected.length;
+            syncSeed.value = stripExt(aiSelected[0].getAttribute('data-name'));
+            syncFolder.value = '';
+            renderSyncPreview();
+            syncModal.hidden = false;
+        }
+
+        function closeSyncModal() {
+            syncModal.hidden = true;
+        }
+
+        // ===== 确定同步：回显到卡片 =====
+        function confirmSync() {
+            var seed = syncSeed.value.trim();
+            if (!seed) {
+                alert('请输入首个素材名称');
+                return;
+            }
+            if (!findSeedSegment(seed)) {
+                alert('名称中未识别到数字段，无法递增');
+                return;
+            }
+            if (!syncFolder.value) {
+                alert('请选择同步至的文件夹');
+                return;
+            }
+            var folder = syncFolder.value;
+            aiSelected.forEach(function (cb) {
+                var status = cb.closest('.ai-card').querySelector('.sync-status');
+                status.textContent = '已同步至 ' + folder;
+                status.classList.remove('hidden');
+            });
+            closeSyncModal();
+            alert('已同步 ' + aiSelected.length + ' 个素材至 ' + folder);
+        }
+
+        // ===== 同步相关事件 =====
+        document.getElementById('syncBtn').addEventListener('click', openSyncModal);
+        document.querySelectorAll('[data-close-sync]').forEach(function (btn) {
+            btn.addEventListener('click', closeSyncModal);
+        });
+        document.getElementById('confirmSyncBtn').addEventListener('click', confirmSync);
+
+        (function initSyncFolder() {
+            var opts = '<option value="">请选择文件夹</option>';
+            MOCK_AI_FOLDERS.forEach(function (f) {
+                opts += '<option value="' + f + '">' + f + '</option>';
+            });
+            syncFolder.innerHTML = opts;
+        })();
+
+        // ===== 名称过长时悬停显示完整名称 =====
+        var nameTip = document.getElementById('nameTip');
+
+        document.addEventListener('mouseover', function (e) {
+            var el = e.target.closest && e.target.closest('[data-full-name]');
+            if (!el || el.scrollWidth <= el.clientWidth) {
+                nameTip.hidden = true;
+                return;
+            }
+            nameTip.textContent = el.getAttribute('data-full-name');
+            nameTip.hidden = false;
+            var r = el.getBoundingClientRect();
+            nameTip.style.left = Math.max(8, Math.min(r.left, innerWidth - nameTip.offsetWidth - 8)) + 'px';
+            nameTip.style.top = (r.bottom + 4) + 'px';
+        });
+
+        document.addEventListener('mouseout', function (e) {
+            var el = e.target.closest && e.target.closest('[data-full-name]');
+            if (el) { nameTip.hidden = true; }
+        });
+
+        filterAiCards();
         initSelects();
     </script>
 </body>
