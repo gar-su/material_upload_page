@@ -128,6 +128,25 @@
             .file-table td {
                 @apply p-2.5 border-b border-gray-100 align-middle;
             }
+            /* ===== 素材名称（可编辑主名 + 固定扩展名） ===== */
+            .file-name-input {
+                @apply w-[240px] border border-transparent rounded px-1 py-0.5 text-[13px] text-gray-700 bg-transparent;
+            }
+            .file-name-input:hover {
+                @apply border-borderGray;
+            }
+            .file-name-input:focus {
+                @apply border-primary bg-white outline-none;
+            }
+            .file-name-input.dup {
+                @apply border-danger text-danger;
+            }
+            .file-ext {
+                @apply text-[13px] text-gray-400;
+            }
+            .dup-hint {
+                @apply mt-0.5 text-xs text-danger;
+            }
             /* ===== 短剧绑定 ===== */
             .drama-bind {
                 @apply text-[13px] text-primary cursor-pointer;
@@ -899,8 +918,8 @@
                 </div>
                 <!-- 上传按钮组 -->
                 <div class="flex gap-2 mb-3">
-                    <button class="btn-sm">文件夹上传</button>
-                    <button class="btn-sm">上传素材</button>
+                    <button class="btn-sm" id="uploadFolderBtn">文件夹上传</button>
+                    <button class="btn-sm" id="uploadFileBtn">上传素材</button>
                     <span class="help-icon">?</span>
                 </div>
                 <!-- 上传状态切换 -->
@@ -920,11 +939,16 @@
                             <th>操作</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="uploadFileBody">
                         <tr>
                             <td>
                                 <img src="https://picsum.photos/id/237/40/40" alt="预览图" class="w-9 h-9 object-cover rounded-sm">
-                                <span class="ml-2">968_LIHE_EC_ID_LM017_260509_F_F_NU.mp4</span>
+                                <span class="ml-2 inline-flex flex-col align-middle">
+                                    <span class="inline-flex items-center">
+                                        <input type="text" class="file-name-input" value="968_LIHE_EC_ID_LM017_260509_F_F_NU"><span class="file-ext">.mp4</span>
+                                    </span>
+                                    <span class="dup-hint" hidden></span>
+                                </span>
                             </td>
                             <td>
                                 <div class="drama-bind" data-row="0">待手动选择</div>
@@ -996,6 +1020,22 @@
         </div>
     </div>
 
+    <!-- ========== 同名素材拦截弹窗 ========== -->
+    <div class="modal-mask" id="dupModal" hidden>
+        <div class="modal-panel w-[480px]">
+            <div class="px-5 py-4 flex items-center justify-between border-b border-borderGray">
+                <div class="text-base text-gray-800 font-medium">提示</div>
+                <button class="modal-close" data-close-dup>×</button>
+            </div>
+            <div class="p-5">
+                <div class="warn-text">有<span class="text-danger" id="dupCount">0</span>个素材与素材库已有素材同名，请重命名后再上传</div>
+            </div>
+            <div class="px-5 py-4 border-t border-borderGray flex justify-end gap-3">
+                <button class="btn-footer btn-primary" data-close-dup>知道了</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ========== 同步素材弹窗 ========== -->
     <div class="modal-mask" id="syncModal" hidden>
         <div class="modal-panel w-[720px]">
@@ -1031,6 +1071,7 @@
                     </thead>
                     <tbody id="syncPreview"></tbody>
                 </table>
+                <div class="mt-2 text-xs text-danger" id="syncConflict" hidden></div>
             </div>
             <div class="px-5 py-4 border-t border-borderGray flex justify-end gap-3">
                 <button class="btn-footer btn-cancel" data-close-sync>取消</button>
@@ -1062,10 +1103,45 @@
             'LA103_Portuguese': ['FORGOTTEN CROWN: S1 (PT)']
         };
 
+        // 素材库已有素材名（mock，用于同名拦截；接入真实接口时替换为批量查名接口）
+        // 其中 895_... 与 AI素材库第 2 张卡片同名，用于演示 AI素材库同步侧的冲突拦截
+        var MOCK_LIBRARY_NAMES = [
+            '1204_QIKEYOU_EC_TR_P560_260901_FF_NU_Q.mp4',
+            '877_LIHE_EC_ID_LM010_260430_F_F_NU.mp4',
+            '1560_LIHE_EC_ID_LM019_260511_F_F_NU.mov',
+            '895_QIKEYOU_EC_TR_P569_260909_FF_NU_Q.mp4'
+        ];
+
+        // 模拟"加入文件列表"的文件（mock，真实场景为拖拽 / 选择文件后的读取结果）
+        var MOCK_UPLOAD_FILES = [
+            { name: '1204_QIKEYOU_EC_TR_P560_260901_FF_NU_Q.mp4', dim: '1080 * 1920', size: '88MB' },
+            { name: '877_LIHE_EC_ID_LM010_260430_F_F_NU.mp4', dim: '1080 * 1920', size: '102MB' },
+            { name: '1560_LIHE_EC_ID_LM019_260511_F_F_NU.mp4', dim: '1080 * 1920', size: '77MB' }
+        ];
+
+        // ===== 同名判定：去首尾空格 + 忽略大小写，含扩展名 =====
+        function normName(name) {
+            return name.trim().toLowerCase();
+        }
+
+        // 与全库已有素材、或本批内其他名称（batchNames）比对
+        function isDupName(fullName, batchNames) {
+            var key = normName(fullName);
+            if (!key) { return false; }
+            if (MOCK_LIBRARY_NAMES.map(normName).indexOf(key) !== -1) { return true; }
+            return (batchNames || []).map(normName).indexOf(key) !== -1;
+        }
+
+        function extOf(name) {
+            var i = name.lastIndexOf('.');
+            return i > 0 ? name.slice(i) : '';
+        }
+
         // ===== DOM 引用 =====
         var uploadModal = document.getElementById('uploadModal');
         var dramaModal = document.getElementById('dramaModal');
         var unboundModal = document.getElementById('unboundModal');
+        var dupModal = document.getElementById('dupModal');
         var playSelect = document.getElementById('playSelect');
         var langSelect = document.getElementById('langSelect');
         var dramaSelect = document.getElementById('dramaSelect');
@@ -1152,8 +1228,83 @@
             dramaModal.hidden = true;
         }
 
+        // ===== 文件行：整名 = 可编辑主名 + 固定扩展名 =====
+        function rowFullName(tr) {
+            return tr.querySelector('.file-name-input').value.trim() + tr.querySelector('.file-ext').textContent;
+        }
+
+        // 主名为空（扩展名固定存在，不能拿整名判空）
+        function isEmptyRow(tr) {
+            return !tr.querySelector('.file-name-input').value.trim();
+        }
+
+        // 冲突行：主名为空，或与全库已有素材 / 本批内其他行同名
+        function collectDupRows() {
+            var rows = Array.prototype.slice.call(document.querySelectorAll('#uploadFileBody tr'));
+            var names = rows.map(rowFullName);
+            return rows.filter(function (tr, i) {
+                var others = names.slice(0, i).concat(names.slice(i + 1));
+                return isEmptyRow(tr) || isDupName(names[i], others);
+            });
+        }
+
+        function refreshDupMarks() {
+            var bad = collectDupRows();
+            document.querySelectorAll('#uploadFileBody tr').forEach(function (tr) {
+                var isBad = bad.indexOf(tr) !== -1;
+                tr.querySelector('.file-name-input').classList.toggle('dup', isBad);
+                var hint = tr.querySelector('.dup-hint');
+                hint.hidden = !isBad;
+                if (isBad) {
+                    hint.textContent = isEmptyRow(tr) ? '名称不能为空' : '与素材库已有素材同名';
+                }
+            });
+        }
+
+        // ===== 加入文件列表（mock：真实场景为拖拽 / 选择文件后逐个加入并查重） =====
+        var uploadRowSeq = 1;
+        var uploadFileCursor = 0;
+
+        function bindDramaCell(cell) {
+            cell.addEventListener('click', function () { openDramaModal(cell); });
+        }
+
+        function appendFileRow() {
+            var file = MOCK_UPLOAD_FILES[uploadFileCursor % MOCK_UPLOAD_FILES.length];
+            uploadFileCursor++;
+            var dot = file.name.lastIndexOf('.');
+            var main = dot > 0 ? file.name.slice(0, dot) : file.name;
+            var tr = document.createElement('tr');
+            tr.innerHTML =
+                '<td>' +
+                    '<img src="https://picsum.photos/id/237/40/40" alt="预览图" class="w-9 h-9 object-cover rounded-sm">' +
+                    '<span class="ml-2 inline-flex flex-col align-middle">' +
+                        '<span class="inline-flex items-center">' +
+                            '<input type="text" class="file-name-input" value="' + main + '">' +
+                            '<span class="file-ext">' + extOf(file.name) + '</span>' +
+                        '</span>' +
+                        '<span class="dup-hint" hidden></span>' +
+                    '</span>' +
+                '</td>' +
+                '<td><div class="drama-bind" data-row="' + (uploadRowSeq++) + '">待手动选择</div></td>' +
+                '<td>' + file.dim + '</td>' +
+                '<td>' + file.size + '</td>' +
+                '<td><button class="del-btn text-danger text-base cursor-pointer">🗑</button></td>';
+            document.getElementById('uploadFileBody').appendChild(tr);
+            bindDramaCell(tr.querySelector('.drama-bind'));
+            tr.querySelector('.file-name-input').addEventListener('input', refreshDupMarks);
+            refreshDupMarks();
+        }
+
         // ===== 完成上传：检查未绑定素材 =====
         function onFinishUpload() {
+            // 同名素材为硬阻断，先于未绑定短剧的软提醒校验
+            var dupRows = collectDupRows();
+            if (dupRows.length) {
+                document.getElementById('dupCount').textContent = dupRows.length;
+                dupModal.hidden = false;
+                return;
+            }
             var rows = document.querySelectorAll('.drama-bind');
             var unbound = [];
             rows.forEach(function (row) {
@@ -1175,9 +1326,13 @@
         document.querySelectorAll('[data-close-upload]').forEach(function (btn) {
             btn.addEventListener('click', closeUploadModal);
         });
-        document.querySelectorAll('.drama-bind').forEach(function (row) {
-            row.addEventListener('click', function () { openDramaModal(row); });
+        document.querySelectorAll('.drama-bind').forEach(bindDramaCell);
+        document.querySelectorAll('#uploadFileBody .file-name-input').forEach(function (input) {
+            input.addEventListener('input', refreshDupMarks);
         });
+        document.querySelector('.drop-area').addEventListener('click', appendFileRow);
+        document.getElementById('uploadFolderBtn').addEventListener('click', appendFileRow);
+        document.getElementById('uploadFileBtn').addEventListener('click', appendFileRow);
         playSelect.addEventListener('change', refreshDramaOptions);
         langSelect.addEventListener('change', refreshDramaOptions);
         document.getElementById('confirmDramaBtn').addEventListener('click', confirmDrama);
@@ -1186,6 +1341,9 @@
         });
         document.querySelectorAll('[data-close-unbound]').forEach(function (btn) {
             btn.addEventListener('click', function () { unboundModal.hidden = true; });
+        });
+        document.querySelectorAll('[data-close-dup]').forEach(function (btn) {
+            btn.addEventListener('click', function () { dupModal.hidden = true; });
         });
         // 确认上传 -> 无视风险继续
         document.getElementById('forceUploadBtn').addEventListener('click', function () {
@@ -1280,6 +1438,23 @@
             return i > 0 ? name.slice(0, i) : name;
         }
 
+        // ===== 本次同步将生成的全部名称（保留源文件扩展名），用于同名拦截 =====
+        function buildSyncedNames() {
+            var seed = syncSeed.value.trim();
+            var seg = findSeedSegment(seed);
+            if (!seg) { return []; }
+            return aiSelected.map(function (cb, i) {
+                return buildSyncedName(seed, seg, i) + extOf(cb.getAttribute('data-name'));
+            });
+        }
+
+        function syncConflicts() {
+            var names = buildSyncedNames();
+            return names.filter(function (n, i) {
+                return isDupName(n, names.slice(0, i).concat(names.slice(i + 1)));
+            });
+        }
+
         // ===== 命名预览 =====
         function renderSyncPreview() {
             var seed = syncSeed.value.trim();
@@ -1297,6 +1472,7 @@
             }
             if (!aiSelected.length) {
                 syncPreview.innerHTML = '';
+                document.getElementById('syncConflict').hidden = true;
                 return;
             }
             var origin = stripExt(aiSelected[0].getAttribute('data-name'));
@@ -1305,6 +1481,13 @@
                 '<td><div class="truncate max-w-[280px]" data-full-name="' + origin + '">' + origin + '</div></td>' +
                 '<td class="text-primary"><div class="truncate max-w-[280px]" data-full-name="' + next + '">' + next + '</div></td>' +
                 '</tr>';
+            // 预览只展示首个素材，其余名称的冲突在此汇总提示
+            var conflictEl = document.getElementById('syncConflict');
+            var conflicts = seg ? syncConflicts() : [];
+            conflictEl.hidden = !conflicts.length;
+            if (conflicts.length) {
+                conflictEl.textContent = '以下名称与素材库已有素材同名，请调整首个素材名称：' + conflicts.join('、');
+            }
         }
 
         syncSeed.addEventListener('input', renderSyncPreview);
@@ -1336,6 +1519,12 @@
             }
             if (!findSeedSegment(seed)) {
                 alert('名称中未识别到数字段，无法递增');
+                return;
+            }
+            // 名称冲突先于目标文件夹校验，与弹窗内字段顺序一致
+            var conflicts = syncConflicts();
+            if (conflicts.length) {
+                alert('有 ' + conflicts.length + ' 个名称与素材库已有素材同名，请调整首个素材名称');
                 return;
             }
             if (!syncFolder.value) {
@@ -1390,6 +1579,7 @@
 
         filterAiCards();
         initSelects();
+        refreshDupMarks();
     </script>
 </body>
 </html>
