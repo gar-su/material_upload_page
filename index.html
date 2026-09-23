@@ -597,14 +597,13 @@
             <!-- 主内容 -->
             <div class="flex-1 flex flex-col overflow-hidden">
                 <!-- 操作按钮栏 -->
-                <div class="bg-white px-4 py-2 border-b border-borderGray flex items-center justify-between">
-                    <div class="flex gap-2">
-                        <button id="syncBtn" class="bg-primary text-white rounded px-3 py-1">同步</button>
-                    </div>
+                <div class="bg-white px-4 py-2 border-b border-borderGray flex items-center justify-end">
                     <div class="text-primary cursor-pointer">刷新</div>
                 </div>
-                <!-- 文件名搜索 -->
+                <!-- 筛选栏：素材类型（单选必选，不可清除）+ 文件名搜索 -->
                 <div class="bg-white px-4 py-2 border-b border-borderGray flex items-center gap-2">
+                    <span>素材类型</span>
+                    <select id="aiType" class="border border-borderGray rounded px-2 py-1"></select>
                     <span>素材名称</span>
                     <input type="text" id="aiSearch" class="border border-borderGray rounded px-2 py-1 w-60" placeholder="请输入素材名称">
                     <button id="aiSearchBtn" class="border border-borderGray rounded px-2 py-1"><i class="fa fa-search"></i></button>
@@ -617,7 +616,7 @@
                 <div class="flex-1 overflow-y-auto scrollbar-thin p-4">
                     <div class="grid grid-cols-5 gap-4">
                         <!-- AI 素材卡片 1 -->
-                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden">
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
                             <div class="relative">
                                 <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="968_LIHE_EC_ID_LM017_260509_F_F_NU.mp4">
                                 <div class="h-36 bg-gray-200 flex items-center justify-center">
@@ -642,7 +641,7 @@
                             </div>
                         </div>
                         <!-- AI 素材卡片 2 -->
-                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden">
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="202混剪二剪">
                             <div class="relative">
                                 <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="895_QIKEYOU_EC_TR_P569_260909_FF_NU_Q.mp4">
                                 <div class="h-36 bg-gray-200 flex items-center justify-center">
@@ -667,7 +666,7 @@
                             </div>
                         </div>
                         <!-- AI 素材卡片 3 -->
-                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden">
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="203旁白二创">
                             <div class="relative">
                                 <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1024_LIHE_EC_ID_LM018_260510_F_F_NU.mp4">
                                 <div class="h-36 bg-gray-200 flex items-center justify-center">
@@ -692,7 +691,7 @@
                             </div>
                         </div>
                         <!-- AI 素材卡片 4 -->
-                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden">
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="204视频精剪">
                             <div class="relative">
                                 <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="377_QIKEYOU_EC_TR_P570_260910_FF_NU_Q.mov">
                                 <div class="h-36 bg-gray-200 flex items-center justify-center">
@@ -717,7 +716,7 @@
                             </div>
                         </div>
                         <!-- AI 素材卡片 5 -->
-                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden">
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="205竖转横">
                             <div class="relative">
                                 <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1560_LIHE_EC_ID_LM019_260511_F_F_NU.mp4">
                                 <div class="h-36 bg-gray-200 flex items-center justify-center">
@@ -742,7 +741,7 @@
                             </div>
                         </div>
                         <!-- AI 素材卡片 6 -->
-                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden">
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
                             <div class="relative">
                                 <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="42_QIKEYOU_EC_TR_P571_260911_FF_NU_Q.mp4">
                                 <div class="h-36 bg-gray-200 flex items-center justify-center">
@@ -767,7 +766,7 @@
                             </div>
                         </div>
                         <!-- AI 素材卡片 7 -->
-                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden">
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="202混剪二剪">
                             <div class="relative">
                                 <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="2310_LIHE_EC_ID_LM020_260512_F_F_NU.mov">
                                 <div class="h-36 bg-gray-200 flex items-center justify-center">
@@ -792,7 +791,7 @@
                             </div>
                         </div>
                         <!-- AI 素材卡片 8 -->
-                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden">
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="203旁白二创">
                             <div class="relative">
                                 <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="688_QIKEYOU_EC_TR_P572_260912_FF_NU_Q.mp4">
                                 <div class="h-36 bg-gray-200 flex items-center justify-center">
@@ -817,7 +816,7 @@
                             </div>
                         </div>
                         <!-- AI 素材卡片 9 -->
-                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden">
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="204视频精剪">
                             <div class="relative">
                                 <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1105_LIHE_EC_ID_LM021_260513_F_F_NU.mp4">
                                 <div class="h-36 bg-gray-200 flex items-center justify-center">
@@ -842,7 +841,7 @@
                             </div>
                         </div>
                         <!-- AI 素材卡片 10 -->
-                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden">
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="205竖转横">
                             <div class="relative">
                                 <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="204_QIKEYOU_EC_TR_P573_260913_FF_NU_Q.mp4">
                                 <div class="h-36 bg-gray-200 flex items-center justify-center">
@@ -867,6 +866,21 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+            <!-- 右侧已选素材栏：跨筛选保留，即同步的对象清单 -->
+            <div class="w-60 bg-white border-l border-borderGray flex flex-col overflow-hidden">
+                <div class="px-3 py-2 border-b border-borderGray text-gray-800">
+                    已选素材（<span id="aiPanelCount">0</span>）
+                </div>
+                <div class="px-3 py-2 border-b border-borderGray flex gap-2">
+                    <button id="aiPanelSelectAll" class="btn-sm flex-1">批量选中</button>
+                    <button id="aiPanelClear" class="btn-sm flex-1">批量清空</button>
+                </div>
+                <div id="aiPanelList" class="flex-1 overflow-y-auto scrollbar-thin p-2"></div>
+                <!-- 同步主操作固定在栏底，列表滚动时始终可见 -->
+                <div class="p-3 border-t border-borderGray">
+                    <button id="syncBtn" class="bg-primary text-white rounded px-3 py-1 w-full">同步</button>
                 </div>
             </div>
         </div>
@@ -1356,6 +1370,9 @@
         // ===== AI素材库：同步目标文件夹（mock，取自批量素材库） =====
         var MOCK_AI_FOLDERS = ['PA638 PT', 'M14-SC-素材包', 'T小素材库', '投放一部六组（方海）', '不允许投放'];
 
+        // ===== AI素材库：素材类型枚举（value 为完整枚举值，下拉展示去掉序号前缀） =====
+        var MOCK_AI_TYPES = ['201混剪一剪', '202混剪二剪', '203旁白二创', '204视频精剪', '205竖转横'];
+
         var syncModal = document.getElementById('syncModal');
         var syncSeed = document.getElementById('syncSeed');
         var syncSeedHint = document.getElementById('syncSeedHint');
@@ -1378,13 +1395,14 @@
             });
         });
 
-        // ===== AI素材库：按文件名筛选 =====
+        // ===== AI素材库：按素材类型 + 文件名筛选 =====
         function filterAiCards() {
             var kw = document.getElementById('aiSearch').value.trim().toLowerCase();
+            var type = document.getElementById('aiType').value;
             var visible = 0;
             document.querySelectorAll('.ai-card').forEach(function (card) {
                 var name = card.querySelector('.ai-pick').getAttribute('data-name').toLowerCase();
-                var hit = !kw || name.indexOf(kw) !== -1;
+                var hit = card.getAttribute('data-type') === type && (!kw || name.indexOf(kw) !== -1);
                 card.hidden = !hit;
                 if (hit) { visible++; }
             });
@@ -1403,14 +1421,59 @@
             document.getElementById('aiSelectAll').checked = visiblePicks.length > 0 && visiblePicks.every(function (cb) {
                 return cb.checked;
             });
+            renderAiSelected();
+        }
+
+        // ===== AI素材库：右侧已选栏（与 aiSelected 同源，被筛掉的选中项也在此列出） =====
+        function renderAiSelected() {
+            document.getElementById('aiPanelCount').textContent = aiSelected.length;
+            var html = '';
+            aiSelected.forEach(function (cb) {
+                var raw = cb.getAttribute('data-name');
+                var full = stripExt(raw);
+                var card = cb.closest('.ai-card');
+                var img = card && card.querySelector('img');
+                html += '<div class="flex items-center gap-2 p-1 rounded hover:bg-bgPage">' +
+                    '<img src="' + (img ? img.src : '') + '" class="w-10 h-10 object-cover rounded shrink-0">' +
+                    '<div class="flex-1 min-w-0 text-xs text-gray-600 truncate" data-full-name="' + full + '">' + full + '</div>' +
+                    '<i class="fa fa-times text-gray-400 cursor-pointer hover:text-danger shrink-0 ai-unpick" data-name="' + raw + '"></i>' +
+                    '</div>';
+            });
+            document.getElementById('aiPanelList').innerHTML = html;
+        }
+
+        // 勾选当前筛选命中的素材（卡片区「全选」与侧边栏「批量选中」共用）
+        function setVisiblePicks(checked) {
+            document.querySelectorAll('.ai-card').forEach(function (card) {
+                if (card.hidden) { return; }
+                card.querySelector('.ai-pick').checked = checked;
+            });
+            updateAiSelection();
         }
 
         // 全选只作用于当前可见（筛选后）的素材
         document.getElementById('aiSelectAll').addEventListener('change', function () {
-            var checked = this.checked;
-            document.querySelectorAll('.ai-card').forEach(function (card) {
-                if (card.hidden) { return; }
-                card.querySelector('.ai-pick').checked = checked;
+            setVisiblePicks(this.checked);
+        });
+
+        // 侧边栏批量选中：把当前筛选结果累加进已选，跨类型保留
+        document.getElementById('aiPanelSelectAll').addEventListener('click', function () {
+            setVisiblePicks(true);
+        });
+
+        // 侧边栏批量清空：清掉全部已选，含被筛掉的
+        document.getElementById('aiPanelClear').addEventListener('click', function () {
+            document.querySelectorAll('.ai-pick').forEach(function (cb) { cb.checked = false; });
+            updateAiSelection();
+        });
+
+        // 侧边栏单条移除（条目动态重绘，走事件委托）
+        document.getElementById('aiPanelList').addEventListener('click', function (e) {
+            var btn = e.target.closest && e.target.closest('.ai-unpick');
+            if (!btn) { return; }
+            var name = btn.getAttribute('data-name');
+            document.querySelectorAll('.ai-pick').forEach(function (cb) {
+                if (cb.getAttribute('data-name') === name) { cb.checked = false; }
             });
             updateAiSelection();
         });
@@ -1420,6 +1483,7 @@
         });
 
         document.getElementById('aiSearchBtn').addEventListener('click', filterAiCards);
+        document.getElementById('aiType').addEventListener('change', filterAiCards);
 
         // ===== 名称递增：取第一个数字段 =====
         function findSeedSegment(name) {
@@ -1554,6 +1618,15 @@
                 opts += '<option value="' + f + '">' + f + '</option>';
             });
             syncFolder.innerHTML = opts;
+        })();
+
+        // 素材类型为单选必选：无空选项，默认落在第一项，切换即重新筛选
+        (function initAiType() {
+            var opts = '';
+            MOCK_AI_TYPES.forEach(function (t) {
+                opts += '<option value="' + t + '">' + t.replace(/^\d+/, '') + '</option>';
+            });
+            document.getElementById('aiType').innerHTML = opts;
         })();
 
         // ===== 名称过长时悬停显示完整名称 =====
