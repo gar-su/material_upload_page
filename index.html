@@ -118,6 +118,19 @@
             .status-tab.active {
                 @apply bg-primary text-white border-primary;
             }
+            /* ===== 分页 ===== */
+            .page-btn {
+                @apply min-w-[28px] h-7 px-1.5 border border-borderGray rounded bg-white text-[13px] text-gray-700;
+            }
+            .page-btn:hover:not(:disabled):not(.active) {
+                @apply border-primary text-primary;
+            }
+            .page-btn.active {
+                @apply bg-primary border-primary text-white;
+            }
+            .page-btn:disabled {
+                @apply text-gray-300 cursor-not-allowed;
+            }
             /* ===== 文件表格 ===== */
             .file-table {
                 @apply w-full border-collapse text-[13px];
@@ -865,7 +878,1496 @@
                                 <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
                             </div>
                         </div>
+                        <!-- AI 素材卡片 11 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1350_LIHE_EC_ID_LM022_260514_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1005/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:03:38</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1350_LIHE_EC_ID_LM022_260514_F_F_NU">1350_LIHE_EC_ID_LM022_260514_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 12 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="202混剪二剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="512_QIKEYOU_EC_TR_P574_260914_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1070/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:02:44</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="512_QIKEYOU_EC_TR_P574_260914_FF_NU_Q">512_QIKEYOU_EC_TR_P574_260914_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 13 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="203旁白二创">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="780_LIHE_EC_ID_LM023_260515_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1048/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:21:15</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="780_LIHE_EC_ID_LM023_260515_F_F_NU">780_LIHE_EC_ID_LM023_260515_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 14 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="204视频精剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1460_QIKEYOU_EC_TR_P575_260915_FF_NU_Q.mov">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1027/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:06:47</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1460_QIKEYOU_EC_TR_P575_260915_FF_NU_Q">1460_QIKEYOU_EC_TR_P575_260915_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 15 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="205竖转横">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="320_LIHE_EC_ID_LM024_260516_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1060/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:22:05</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="320_LIHE_EC_ID_LM024_260516_F_F_NU">320_LIHE_EC_ID_LM024_260516_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 16 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1890_QIKEYOU_EC_TR_P576_260916_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1071/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:23:58</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1890_QIKEYOU_EC_TR_P576_260916_FF_NU_Q">1890_QIKEYOU_EC_TR_P576_260916_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 17 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="202混剪二剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="610_LIHE_EC_ID_LM025_260517_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1031/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:23:13</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="610_LIHE_EC_ID_LM025_260517_F_F_NU">610_LIHE_EC_ID_LM025_260517_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 18 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="203旁白二创">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1050_QIKEYOU_EC_TR_P577_260917_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1011/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:22:27</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1050_QIKEYOU_EC_TR_P577_260917_FF_NU_Q">1050_QIKEYOU_EC_TR_P577_260917_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 19 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="204视频精剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="2440_LIHE_EC_ID_LM026_260518_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1041/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:03:01</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="2440_LIHE_EC_ID_LM026_260518_F_F_NU">2440_LIHE_EC_ID_LM026_260518_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 20 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="205竖转横">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="158_QIKEYOU_EC_TR_P578_260918_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1055/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:21:39</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="158_QIKEYOU_EC_TR_P578_260918_FF_NU_Q">158_QIKEYOU_EC_TR_P578_260918_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 21 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="880_LIHE_EC_ID_LM027_260519_F_F_NU.mov">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1005/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:03:38</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="880_LIHE_EC_ID_LM027_260519_F_F_NU">880_LIHE_EC_ID_LM027_260519_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 22 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="202混剪二剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1990_QIKEYOU_EC_TR_P579_260919_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1070/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:02:44</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1990_QIKEYOU_EC_TR_P579_260919_FF_NU_Q">1990_QIKEYOU_EC_TR_P579_260919_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 23 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="203旁白二创">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1740_LIHE_EC_ID_LM028_260520_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1048/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:21:15</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1740_LIHE_EC_ID_LM028_260520_F_F_NU">1740_LIHE_EC_ID_LM028_260520_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 24 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="204视频精剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="460_QIKEYOU_EC_TR_P580_260920_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1027/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:06:47</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="460_QIKEYOU_EC_TR_P580_260920_FF_NU_Q">460_QIKEYOU_EC_TR_P580_260920_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 25 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="205竖转横">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1220_LIHE_EC_ID_LM029_260521_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1060/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:22:05</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1220_LIHE_EC_ID_LM029_260521_F_F_NU">1220_LIHE_EC_ID_LM029_260521_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 26 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="2050_QIKEYOU_EC_TR_P581_260921_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1071/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:23:58</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="2050_QIKEYOU_EC_TR_P581_260921_FF_NU_Q">2050_QIKEYOU_EC_TR_P581_260921_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 27 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="202混剪二剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="930_LIHE_EC_ID_LM030_260522_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1031/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:23:13</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="930_LIHE_EC_ID_LM030_260522_F_F_NU">930_LIHE_EC_ID_LM030_260522_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 28 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="203旁白二创">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="3170_QIKEYOU_EC_TR_P582_260922_FF_NU_Q.mov">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1011/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:22:27</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="3170_QIKEYOU_EC_TR_P582_260922_FF_NU_Q">3170_QIKEYOU_EC_TR_P582_260922_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 29 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="204视频精剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="670_LIHE_EC_ID_LM031_260523_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1041/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:03:01</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="670_LIHE_EC_ID_LM031_260523_F_F_NU">670_LIHE_EC_ID_LM031_260523_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 30 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="205竖转横">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1410_QIKEYOU_EC_TR_P583_260923_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1055/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:21:39</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1410_QIKEYOU_EC_TR_P583_260923_FF_NU_Q">1410_QIKEYOU_EC_TR_P583_260923_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 31 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="2260_LIHE_EC_ID_LM032_260524_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1005/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:03:38</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="2260_LIHE_EC_ID_LM032_260524_F_F_NU">2260_LIHE_EC_ID_LM032_260524_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 32 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="202混剪二剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="84_QIKEYOU_EC_TR_P584_260924_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1070/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:02:44</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="84_QIKEYOU_EC_TR_P584_260924_FF_NU_Q">84_QIKEYOU_EC_TR_P584_260924_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 33 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="203旁白二创">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1180_LIHE_EC_ID_LM033_260525_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1048/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:21:15</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1180_LIHE_EC_ID_LM033_260525_F_F_NU">1180_LIHE_EC_ID_LM033_260525_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 34 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="204视频精剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="2380_QIKEYOU_EC_TR_P585_260925_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1027/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:06:47</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="2380_QIKEYOU_EC_TR_P585_260925_FF_NU_Q">2380_QIKEYOU_EC_TR_P585_260925_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 35 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="205竖转横">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="520_LIHE_EC_ID_LM034_260526_F_F_NU.mov">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1060/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:22:05</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="520_LIHE_EC_ID_LM034_260526_F_F_NU">520_LIHE_EC_ID_LM034_260526_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 36 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1620_QIKEYOU_EC_TR_P586_260926_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1071/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:23:58</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1620_QIKEYOU_EC_TR_P586_260926_FF_NU_Q">1620_QIKEYOU_EC_TR_P586_260926_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 37 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="202混剪二剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1010_LIHE_EC_ID_LM035_260527_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1031/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:23:13</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1010_LIHE_EC_ID_LM035_260527_F_F_NU">1010_LIHE_EC_ID_LM035_260527_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 38 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="203旁白二创">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="2740_QIKEYOU_EC_TR_P587_260927_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1011/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:22:27</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="2740_QIKEYOU_EC_TR_P587_260927_FF_NU_Q">2740_QIKEYOU_EC_TR_P587_260927_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 39 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="204视频精剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="750_LIHE_EC_ID_LM036_260528_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1041/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:03:01</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="750_LIHE_EC_ID_LM036_260528_F_F_NU">750_LIHE_EC_ID_LM036_260528_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 40 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="205竖转横">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1300_QIKEYOU_EC_TR_P588_260928_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1055/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:21:39</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1300_QIKEYOU_EC_TR_P588_260928_FF_NU_Q">1300_QIKEYOU_EC_TR_P588_260928_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 41 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1420_LIHE_EC_ID_LM037_260529_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1005/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:03:38</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1420_LIHE_EC_ID_LM037_260529_F_F_NU">1420_LIHE_EC_ID_LM037_260529_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 42 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="202混剪二剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="690_QIKEYOU_EC_TR_P589_260929_FF_NU_Q.mov">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1070/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:02:44</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="690_QIKEYOU_EC_TR_P589_260929_FF_NU_Q">690_QIKEYOU_EC_TR_P589_260929_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 43 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="203旁白二创">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="3050_LIHE_EC_ID_LM038_260530_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1048/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:21:15</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="3050_LIHE_EC_ID_LM038_260530_F_F_NU">3050_LIHE_EC_ID_LM038_260530_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 44 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="204视频精剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="2210_QIKEYOU_EC_TR_P590_260930_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1027/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:06:47</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="2210_QIKEYOU_EC_TR_P590_260930_FF_NU_Q">2210_QIKEYOU_EC_TR_P590_260930_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 45 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="205竖转横">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1140_LIHE_EC_ID_LM039_260531_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1060/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:22:05</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1140_LIHE_EC_ID_LM039_260531_F_F_NU">1140_LIHE_EC_ID_LM039_260531_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 46 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1230_QIKEYOU_EC_TR_P591_261001_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1071/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:23:58</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1230_QIKEYOU_EC_TR_P591_261001_FF_NU_Q">1230_QIKEYOU_EC_TR_P591_261001_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 47 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="202混剪二剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="860_LIHE_EC_ID_LM040_260601_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1031/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:23:13</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="860_LIHE_EC_ID_LM040_260601_F_F_NU">860_LIHE_EC_ID_LM040_260601_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 48 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="203旁白二创">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="3480_QIKEYOU_EC_TR_P592_261002_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1011/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:22:27</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="3480_QIKEYOU_EC_TR_P592_261002_FF_NU_Q">3480_QIKEYOU_EC_TR_P592_261002_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 49 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="204视频精剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1930_LIHE_EC_ID_LM041_260602_F_F_NU.mov">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1041/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:03:01</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1930_LIHE_EC_ID_LM041_260602_F_F_NU">1930_LIHE_EC_ID_LM041_260602_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 50 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="205竖转横">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="940_QIKEYOU_EC_TR_P593_261003_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1055/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:21:39</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="940_QIKEYOU_EC_TR_P593_261003_FF_NU_Q">940_QIKEYOU_EC_TR_P593_261003_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 51 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="560_LIHE_EC_ID_LM042_260603_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1005/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:03:38</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="560_LIHE_EC_ID_LM042_260603_F_F_NU">560_LIHE_EC_ID_LM042_260603_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 52 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="202混剪二剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1770_QIKEYOU_EC_TR_P594_261004_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1070/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:02:44</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1770_QIKEYOU_EC_TR_P594_261004_FF_NU_Q">1770_QIKEYOU_EC_TR_P594_261004_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 53 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="203旁白二创">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="2700_LIHE_EC_ID_LM043_260604_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1048/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:21:15</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="2700_LIHE_EC_ID_LM043_260604_F_F_NU">2700_LIHE_EC_ID_LM043_260604_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 54 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="204视频精剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="530_QIKEYOU_EC_TR_P595_261005_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1027/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:06:47</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="530_QIKEYOU_EC_TR_P595_261005_FF_NU_Q">530_QIKEYOU_EC_TR_P595_261005_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 55 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="205竖转横">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1320_LIHE_EC_ID_LM044_260605_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1060/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:22:05</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1320_LIHE_EC_ID_LM044_260605_F_F_NU">1320_LIHE_EC_ID_LM044_260605_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 56 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="2560_QIKEYOU_EC_TR_P596_261006_FF_NU_Q.mov">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1071/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:23:58</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="2560_QIKEYOU_EC_TR_P596_261006_FF_NU_Q">2560_QIKEYOU_EC_TR_P596_261006_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 57 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="640_LIHE_EC_ID_LM045_260606_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1031/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:23:13</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="640_LIHE_EC_ID_LM045_260606_F_F_NU">640_LIHE_EC_ID_LM045_260606_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 58 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1090_QIKEYOU_EC_TR_P597_261007_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1011/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:22:27</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1090_QIKEYOU_EC_TR_P597_261007_FF_NU_Q">1090_QIKEYOU_EC_TR_P597_261007_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 59 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="2180_LIHE_EC_ID_LM046_260607_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1041/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:03:01</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="2180_LIHE_EC_ID_LM046_260607_F_F_NU">2180_LIHE_EC_ID_LM046_260607_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 60 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="2010_QIKEYOU_EC_TR_P598_261008_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1055/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:21:39</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="2010_QIKEYOU_EC_TR_P598_261008_FF_NU_Q">2010_QIKEYOU_EC_TR_P598_261008_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 61 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="970_LIHE_EC_ID_LM047_260608_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1005/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:03:38</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="970_LIHE_EC_ID_LM047_260608_F_F_NU">970_LIHE_EC_ID_LM047_260608_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 62 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="730_QIKEYOU_EC_TR_P599_261009_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1070/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:02:44</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="730_QIKEYOU_EC_TR_P599_261009_FF_NU_Q">730_QIKEYOU_EC_TR_P599_261009_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 63 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1610_LIHE_EC_ID_LM048_260609_F_F_NU.mov">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1048/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:21:15</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1610_LIHE_EC_ID_LM048_260609_F_F_NU">1610_LIHE_EC_ID_LM048_260609_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 64 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="2860_QIKEYOU_EC_TR_P600_261010_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1027/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:06:47</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="2860_QIKEYOU_EC_TR_P600_261010_FF_NU_Q">2860_QIKEYOU_EC_TR_P600_261010_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 65 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="2490_LIHE_EC_ID_LM049_260610_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1060/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:22:05</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="2490_LIHE_EC_ID_LM049_260610_F_F_NU">2490_LIHE_EC_ID_LM049_260610_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 66 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1520_QIKEYOU_EC_TR_P601_261011_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1071/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:23:58</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1520_QIKEYOU_EC_TR_P601_261011_FF_NU_Q">1520_QIKEYOU_EC_TR_P601_261011_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 67 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="1270_LIHE_EC_ID_LM050_260611_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1031/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:23:13</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="1270_LIHE_EC_ID_LM050_260611_F_F_NU">1270_LIHE_EC_ID_LM050_260611_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 68 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="400_QIKEYOU_EC_TR_P602_261012_FF_NU_Q.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1011/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:22:27</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="400_QIKEYOU_EC_TR_P602_261012_FF_NU_Q">400_QIKEYOU_EC_TR_P602_261012_FF_NU_Q</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
+                        <!-- AI 素材卡片 69 -->
+                        <div class="ai-card bg-white rounded border border-borderGray overflow-hidden" data-type="201混剪一剪">
+                            <div class="relative">
+                                <input type="checkbox" class="ai-pick absolute top-1 left-1 z-10" data-name="590_LIHE_EC_ID_LM051_260612_F_F_NU.mp4">
+                                <div class="h-36 bg-gray-200 flex items-center justify-center">
+                                    <img src="https://picsum.photos/id/1041/200/144" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
+                                            <i class="fa fa-play"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="absolute top-1 right-1 bg-tagOrange text-orange-800 px-1 rounded text-xs">AI生成</div>
+                                <div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">00:03:01</div>
+                            </div>
+                            <div class="p-2">
+                                <div class="text-xs text-gray-600 truncate" data-full-name="590_LIHE_EC_ID_LM051_260612_F_F_NU">590_LIHE_EC_ID_LM051_260612_F_F_NU</div>
+                                <div class="text-xs text-purple-600">1080 * 1920</div>
+                                <div class="mt-2 flex justify-between">
+                                    <span class="bg-tagOrange px-1 rounded text-xs">七颗柚</span>
+                                    <span class="bg-tagGreen px-1 rounded text-xs">2026-09-09 03:23:39</span>
+                                </div>
+                                <div class="hidden mt-1 text-xs text-primary sync-status truncate"></div>
+                            </div>
+                        </div>
                     </div>
+                </div>
+                <!-- 分页控件：固定在卡片区底部，不随卡片滚动 -->
+                <div class="bg-white px-4 py-2 border-t border-borderGray flex items-center justify-end gap-3">
+                    <div class="flex items-center gap-1">
+                        <span class="text-gray-600">每页</span>
+                        <select id="aiPageSize" class="border border-borderGray rounded px-1 py-0.5 bg-white">
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <span class="text-gray-600">条</span>
+                    </div>
+                    <div class="flex items-center gap-1" id="aiPager"></div>
                 </div>
             </div>
             <!-- 右侧已选素材栏：跨筛选保留，即同步的对象清单 -->
@@ -1379,6 +2881,8 @@
         var syncFolder = document.getElementById('syncFolder');
         var syncPreview = document.getElementById('syncPreview');
         var aiSelected = [];
+        var aiPage = 1;       // 当前页码（1 起），筛选或每页条数变更时回到第 1 页
+        var aiPageSize = 10;  // 每页条数
 
         // ===== 素材库页面切换 =====
         var pageEls = {
@@ -1395,19 +2899,41 @@
             });
         });
 
-        // ===== AI素材库：按素材类型 + 文件名筛选 =====
+        // ===== AI素材库：按素材类型 + 文件名筛选，再按当前页切片渲染 =====
         function filterAiCards() {
             var kw = document.getElementById('aiSearch').value.trim().toLowerCase();
             var type = document.getElementById('aiType').value;
-            var visible = 0;
+            var matched = [];
             document.querySelectorAll('.ai-card').forEach(function (card) {
                 var name = card.querySelector('.ai-pick').getAttribute('data-name').toLowerCase();
-                var hit = card.getAttribute('data-type') === type && (!kw || name.indexOf(kw) !== -1);
-                card.hidden = !hit;
-                if (hit) { visible++; }
+                if (card.getAttribute('data-type') === type && (!kw || name.indexOf(kw) !== -1)) {
+                    matched.push(card);
+                }
             });
-            document.getElementById('aiVisibleCount').textContent = visible;
+            // 总数取筛选命中数，跨页不拆
+            document.getElementById('aiVisibleCount').textContent = matched.length;
+            renderAiPage(matched);
+        }
+
+        // 只有命中且落在当前页窗口内的卡片可见，其余一律 hidden
+        function renderAiPage(matched) {
+            var totalPages = Math.max(1, Math.ceil(matched.length / aiPageSize));
+            var start = (aiPage - 1) * aiPageSize;
+            document.querySelectorAll('.ai-card').forEach(function (card) { card.hidden = true; });
+            matched.slice(start, start + aiPageSize).forEach(function (card) { card.hidden = false; });
+            renderAiPager(totalPages);
             updateAiSelection();
+        }
+
+        // 分页控件整体重绘，‹ › 的禁用态由页码边界决定
+        function renderAiPager(totalPages) {
+            var html = '<span class="text-gray-600 mr-1">共 ' + totalPages + ' 页</span>';
+            html += '<button class="page-btn" data-page-go="' + (aiPage - 1) + '"' + (aiPage <= 1 ? ' disabled' : '') + '>‹</button>';
+            for (var p = 1; p <= totalPages; p++) {
+                html += '<button class="page-btn' + (p === aiPage ? ' active' : '') + '" data-page-go="' + p + '">' + p + '</button>';
+            }
+            html += '<button class="page-btn" data-page-go="' + (aiPage + 1) + '"' + (aiPage >= totalPages ? ' disabled' : '') + '>›</button>';
+            document.getElementById('aiPager').innerHTML = html;
         }
 
         // ===== AI素材库：勾选计数 =====
@@ -1482,8 +3008,30 @@
             cb.addEventListener('change', updateAiSelection);
         });
 
-        document.getElementById('aiSearchBtn').addEventListener('click', filterAiCards);
-        document.getElementById('aiType').addEventListener('change', filterAiCards);
+        // 筛选条件变更后结果集变了，页码回到第 1 页
+        document.getElementById('aiSearchBtn').addEventListener('click', function () {
+            aiPage = 1;
+            filterAiCards();
+        });
+        document.getElementById('aiType').addEventListener('change', function () {
+            aiPage = 1;
+            filterAiCards();
+        });
+
+        // 每页条数变更同样回到第 1 页
+        document.getElementById('aiPageSize').addEventListener('change', function () {
+            aiPageSize = parseInt(this.value, 10);
+            aiPage = 1;
+            filterAiCards();
+        });
+
+        // 页码切换（按钮动态重绘，走事件委托）
+        document.getElementById('aiPager').addEventListener('click', function (e) {
+            var btn = e.target.closest && e.target.closest('.page-btn');
+            if (!btn) { return; }
+            aiPage = parseInt(btn.getAttribute('data-page-go'), 10);
+            filterAiCards();
+        });
 
         // ===== 名称递增：取第一个数字段 =====
         function findSeedSegment(name) {

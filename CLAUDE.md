@@ -38,10 +38,11 @@ Tailwind CDN + `<style type="text/tailwindcss">` 的 `@layer utilities` / `@laye
 
 原生 ES5 风格（`var` + `function`，无框架、无模块），全部写在 `</body>` 前的单个 `<script>` 内，直接执行（无 `DOMContentLoaded`）。保持此风格：不引入构建、不改用 `const`/箭头函数混写、不拆分文件。
 
-状态只有两处：
+状态只有四处：
 
 - `bindMap`：`data-row`（文件行的行号字符串）→ `{ playId, playName, lang, drama }`，短剧绑定的唯一数据源。
-- `aiSelected`：AI素材库当前勾选的 checkbox 数组，每次由 `updateAiSelection()` 从 DOM 重算。它是**跨筛选**的——筛选只改 `card.hidden` 从不碰勾选，所以被筛掉的选中项仍留在其中，右侧已选栏与同步链路都以它为准。
+- `aiSelected`：AI素材库当前勾选的 checkbox 数组，每次由 `updateAiSelection()` 从 DOM 重算。它是**跨筛选、跨页**的——筛选与分页只改 `card.hidden` 从不碰勾选，所以被筛掉、翻到别页的选中项仍留在其中，右侧已选栏与同步链路都以它为准。
+- `aiPage` / `aiPageSize`：AI素材库的当前页码（1 起）与每页条数（默认 10）。筛选条件或每页条数变更时 `aiPage` 一律回到 1；渲染统一走 `filterAiCards()` → `renderAiPage()`。
 
 另有 `uploadRowSeq` / `uploadFileCursor` 两个计数器，只服务于动态追加文件行，不承载业务状态。素材名称的冲突判定不设状态，一律由 `collectDupRows()` 从 DOM 现算。
 
@@ -50,6 +51,7 @@ Tailwind CDN + `<style type="text/tailwindcss">` 的 `@layer utilities` / `@laye
 - `.drama-bind[data-row]` —— 索引 `bindMap` 的键。
 - `.ai-pick[data-name]` —— 素材原始文件名**含扩展名**，展示前用 `stripExt()` 去扩展名。
 - `.ai-card[data-type]` —— 卡片所属素材类型（`MOCK_AI_TYPES` 的完整枚举值），`#aiType` 的筛选依据。
+- `#aiPager .page-btn[data-page-go]` —— 分页按钮的目标页码，靠 `#aiPager` 事件委托（控件每次重绘）。
 - `.ai-unpick[data-name]` —— 右侧已选栏条目的单条移除，靠 `#aiPanelList` 事件委托（条目动态重绘）。
 - `[data-full-name]` —— 配合全局 `mouseover` 监听与 `#nameTip` 浮层，仅当 `scrollWidth > clientWidth`（实际被截断）时显示完整文本。
 - `.file-name-input` + `.file-ext` —— 上传文件行的名称，主名可编辑、扩展名固定；整名由 `rowFullName()` 拼出，是查重的输入。
@@ -73,7 +75,7 @@ Tailwind CDN + `<style type="text/tailwindcss">` 的 `@layer utilities` / `@laye
 | 文档 | 覆盖内容 | 代码入口 |
 | ---- | ---- | ---- |
 | `需求文档.md` | 上传弹窗短剧绑定、未绑定拦截、同名素材拦截 | `#uploadModal` / `#dramaModal` / `#unboundModal` / `#dupModal`、`bindMap`、`confirmDrama()`、`refreshDramaOptions()`、`onFinishUpload()`、`isDupName()` / `collectDupRows()` / `refreshDupMarks()`、`appendFileRow()` |
-| `AI素材库需求文档.md` | AI素材库 tab、素材类型筛选、批量命名与同步 | `#page-ai` / `#syncModal`、`filterAiCards()`、`updateAiSelection()` / `renderAiSelected()`（右侧已选栏）、`setVisiblePicks()`、`findSeedSegment()` / `buildSyncedName()` / `stripExt()` |
+| `AI素材库需求文档.md` | AI素材库 tab、素材类型筛选、分页、批量命名与同步 | `#page-ai` / `#syncModal`、`filterAiCards()` / `renderAiPage()` / `renderAiPager()`（筛选 + 分页）、`updateAiSelection()` / `renderAiSelected()`（右侧已选栏）、`setVisiblePicks()`、`findSeedSegment()` / `buildSyncedName()` / `stripExt()` |
 | `未绑定素材自动绑定需求文档.md` | 后端定时任务补绑 | 无前端改动（明确要求 upload 页零改动） |
 | `重名素材拦截需求文档.md` | 素材名全库唯一的判定口径、两个入口（上传页 / AI素材库同步）的拦截与查名接口 | 同上两处，判定口径的唯一权威来源 |
 
