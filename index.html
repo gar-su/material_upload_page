@@ -2587,6 +2587,7 @@
                     </thead>
                     <tbody id="syncPreview"></tbody>
                 </table>
+                <div class="mt-2 text-xs text-gray-400" id="syncMoreHint" hidden></div>
                 <div class="mt-2 text-xs text-danger" id="syncConflict" hidden></div>
             </div>
             <div class="px-5 py-4 border-t border-borderGray flex justify-end gap-3">
@@ -3084,16 +3085,25 @@
             }
             if (!aiSelected.length) {
                 syncPreview.innerHTML = '';
+                document.getElementById('syncMoreHint').hidden = true;
                 document.getElementById('syncConflict').hidden = true;
                 return;
             }
-            var origin = stripExt(aiSelected[0].getAttribute('data-name'));
-            var next = seg ? buildSyncedName(seed, seg, 0) : '—';
-            syncPreview.innerHTML = '<tr>' +
-                '<td><div class="truncate max-w-[280px]" data-full-name="' + origin + '">' + origin + '</div></td>' +
-                '<td class="text-primary"><div class="truncate max-w-[280px]" data-full-name="' + next + '">' + next + '</div></td>' +
-                '</tr>';
-            // 预览只展示首个素材，其余名称的冲突在此汇总提示
+            // 按选中顺序最多展示前 10 条，其余只提示条数
+            var PREVIEW_LIMIT = 10;
+            syncPreview.innerHTML = aiSelected.slice(0, PREVIEW_LIMIT).map(function (cb, i) {
+                var origin = stripExt(cb.getAttribute('data-name'));
+                var next = seg ? buildSyncedName(seed, seg, i) : '—';
+                return '<tr>' +
+                    '<td><div class="truncate max-w-[280px]" data-full-name="' + origin + '">' + origin + '</div></td>' +
+                    '<td class="text-primary"><div class="truncate max-w-[280px]" data-full-name="' + next + '">' + next + '</div></td>' +
+                    '</tr>';
+            }).join('');
+            var more = aiSelected.length - PREVIEW_LIMIT;
+            var moreHint = document.getElementById('syncMoreHint');
+            moreHint.hidden = more <= 0;
+            if (more > 0) { moreHint.textContent = '另有 ' + more + ' 条未展示'; }
+            // 命名冲突不受预览条数限制，全量汇总在此提示
             var conflictEl = document.getElementById('syncConflict');
             var conflicts = seg ? syncConflicts() : [];
             conflictEl.hidden = !conflicts.length;
