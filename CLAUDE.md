@@ -20,7 +20,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### 弹窗约定
 
-五个弹窗 `#uploadModal` / `#dramaModal` / `#unboundModal` / `#dupModal` / `#syncModal`：
+六个弹窗 `#uploadModal` / `#tagModal` / `#dramaModal` / `#unboundModal` / `#dupModal` / `#syncModal`：
 
 - 开合一律用 `element.hidden = true/false`（**不是** `classList`）。
 - 关闭按钮用 `[data-close-<modal>]` 属性批量绑定，新增关闭入口沿用该属性。
@@ -38,13 +38,13 @@ Tailwind CDN + `<style type="text/tailwindcss">` 的 `@layer utilities` / `@laye
 
 原生 ES5 风格（`var` + `function`，无框架、无模块），全部写在 `</body>` 前的单个 `<script>` 内，直接执行（无 `DOMContentLoaded`）。保持此风格：不引入构建、不改用 `const`/箭头函数混写、不拆分文件。
 
-状态只有四处：
+持久状态只有四处：
 
 - `bindMap`：`data-row`（文件行的行号字符串）→ `{ playId, playName, lang, drama }`，短剧绑定的唯一数据源。
 - `aiSelected`：AI素材库当前勾选的 checkbox 数组，每次由 `updateAiSelection()` 从 DOM 重算。它是**跨筛选、跨页**的——筛选与分页只改 `card.hidden` 从不碰勾选，所以被筛掉、翻到别页的选中项仍留在其中，右侧已选栏与同步链路都以它为准。
 - `aiPage` / `aiPageSize`：AI素材库的当前页码（1 起）与每页条数（默认 10）。筛选条件或每页条数变更时 `aiPage` 一律回到 1；渲染统一走 `filterAiCards()` → `renderAiPage()`。
 
-另有 `uploadRowSeq` / `uploadFileCursor` 两个计数器，只服务于动态追加文件行，不承载业务状态。素材名称的冲突判定不设状态，一律由 `collectDupRows()` 从 DOM 现算。
+另有 `uploadRowSeq` / `uploadFileCursor` 两个计数器，只服务于动态追加文件行，不承载业务状态；`tagEditRows` / `tagInitial` / `tagPending` / `tagActiveGroup` 是「修改标签」弹窗的临时编辑态，仅在一次弹窗会话内有效。素材名称的冲突判定不设状态，一律由 `collectDupRows()` 从 DOM 现算；素材标签同样以 DOM 为准，逐行写在 `data-tags` 上，文件名解析、行内编辑与批量增删都只改这些属性。
 
 数据属性是 DOM 与逻辑之间的契约：
 
@@ -55,10 +55,14 @@ Tailwind CDN + `<style type="text/tailwindcss">` 的 `@layer utilities` / `@laye
 - `.ai-unpick[data-name]` —— 右侧已选栏条目的单条移除，靠 `#aiPanelList` 事件委托（条目动态重绘）。
 - `[data-full-name]` —— 配合全局 `mouseover` 监听与 `#nameTip` 浮层，仅当 `scrollWidth > clientWidth`（实际被截断）时显示完整文本。
 - `.file-name-input` + `.file-ext` —— 上传文件行的名称，主名可编辑、扩展名固定；整名由 `rowFullName()` 拼出，是查重的输入。
+- `#uploadFileBody tr[data-tags]` —— 该素材的标签 key（按标签组顺序逗号分隔），行内 chips 与批量弹窗都以此为准。
+- `#uploadFileBody tr[data-tag-edited]` —— 为 `1` 时表示标签被手动改过，改文件名不再覆盖。
+- `.row-check` / `#uploadSelectAll` —— 上传文件行的批量选择；`.row-tag-edit` 打开单素材「修改标签」弹窗；`#batchTagBtn` 对勾选素材批量增删标签。
+- `#tagGroupList .tag-group-item[data-group-index]` —— 两层标签选择器的组索引；`#tagOptionList input[data-tag-key]` —— 当前组下的标签勾选项。
 
 ## Mock 数据
 
-五组前端写死数据，是接入真实接口时的**唯一替换点**，交互逻辑无需改动：
+六组前端写死数据，是接入真实接口时的**唯一替换点**，交互逻辑无需改动：
 
 | 变量 | 位置 | 说明 |
 | ---- | ---- | ---- |
@@ -66,7 +70,8 @@ Tailwind CDN + `<style type="text/tailwindcss">` 的 `@layer utilities` / `@laye
 | `MOCK_AI_FOLDERS` | AI素材库段落 | 同步目标文件夹，`initSyncFolder()` 填充下拉 |
 | `MOCK_AI_TYPES` | AI素材库段落 | 素材类型枚举，`initAiType()` 填充 `#aiType`（value 为完整枚举值，下拉展示去掉序号前缀） |
 | `MOCK_LIBRARY_NAMES` | 脚本顶部 | 全库已有素材名（含扩展名），同名拦截的查重数据源 |
-| `MOCK_UPLOAD_FILES` | 脚本顶部 | 模拟"加入列表"的文件，点击拖拽区 / 上传按钮逐个追加 |
+| `MOCK_UPLOAD_FILES` | 脚本顶部 | 模拟"加入列表"的文件（日期后含 MF/FF 与 AISC/MYAISC/NU），点击拖拽区 / 上传按钮逐个追加 |
+| `MOCK_TAG_GROUPS` | 脚本顶部 | 两组四标签：业务类型（免费 / 付费）、AI素材（外部AI素材 / 麦芽AI素材），驱动 `renderTagModal()` 的两层选择器 |
 
 `MOCK_AI_FOLDERS` 的取值与 `#page-batch` 左侧素材树中的文件夹名对应，改一侧时注意另一侧。
 
@@ -77,6 +82,7 @@ Tailwind CDN + `<style type="text/tailwindcss">` 的 `@layer utilities` / `@laye
 | `需求文档.md` | 上传弹窗短剧绑定、未绑定拦截、同名素材拦截 | `#uploadModal` / `#dramaModal` / `#unboundModal` / `#dupModal`、`bindMap`、`confirmDrama()`、`refreshDramaOptions()`、`onFinishUpload()`、`isDupName()` / `collectDupRows()` / `refreshDupMarks()`、`appendFileRow()` |
 | `AI素材库需求文档.md` | AI素材库 tab、素材类型筛选、分页、批量命名与同步 | `#page-ai` / `#syncModal`、`filterAiCards()` / `renderAiPage()` / `renderAiPager()`（筛选 + 分页）、`updateAiSelection()` / `renderAiSelected()`（右侧已选栏）、`setVisiblePicks()`、`findSeedSegment()` / `buildSyncedName()` / `stripExt()` |
 | `未绑定素材自动绑定需求文档.md` | 后端定时任务补绑 | 无前端改动（明确要求 upload 页零改动） |
+| `素材命名与标签自动填充需求文档.md` | 新命名规则、上传标签自动填充、素材维度标签与批量设置、近一个月数据清洗 | `#tagModal`、`#uploadFileBody tr[data-tags]`、`.row-tag-edit`、`#batchTagBtn`、`tagsFromName()` / `setRowTags()` / `renderRowTags()` / `openTagModal()` / `renderTagModal()` / `applyTagModal()` / `updateBatchTagBtn()` |
 | `重名素材拦截需求文档.md` | 素材名全库唯一的判定口径、两个入口（上传页 / AI素材库同步）的拦截与查名接口 | 同上两处，判定口径的唯一权威来源 |
 
 文档中的「待确认项（Q1–Q16）」「范围外」「不涉及」章节是范围边界，改动超出已验证条目时先回到文档确认。

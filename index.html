@@ -83,6 +83,43 @@
             .form-textarea {
                 @apply w-full h-[72px] border border-borderGray rounded px-3 py-2 text-sm text-gray-700 placeholder-gray-400 resize-none;
             }
+            /* ===== 标签：chips 与两层选择弹窗 ===== */
+            .tag-picker {
+                @apply w-full min-h-9 border border-borderGray rounded px-2 py-1.5 flex items-center gap-1.5 flex-wrap bg-white;
+            }
+            .tag-chip {
+                @apply inline-flex items-center gap-1 bg-bgPage border border-borderGray rounded px-1.5 py-0.5 text-xs text-gray-700;
+            }
+            .tag-chip-del {
+                @apply text-gray-400 cursor-pointer hover:text-danger;
+            }
+            .tag-picker-empty {
+                @apply text-sm text-gray-400;
+            }
+            .row-tag-list {
+                @apply flex items-center gap-1 flex-wrap;
+            }
+            .row-tag-edit {
+                @apply text-xs text-primary cursor-pointer shrink-0;
+            }
+            .tag-selector {
+                @apply flex border border-borderGray rounded h-[220px] overflow-hidden;
+            }
+            .tag-group-list {
+                @apply w-40 border-r border-borderGray overflow-y-auto scrollbar-thin p-1 shrink-0;
+            }
+            .tag-group-item {
+                @apply px-2 py-1.5 rounded text-sm text-gray-700 cursor-pointer hover:bg-bgPage;
+            }
+            .tag-group-item.active {
+                @apply bg-bgPage text-primary;
+            }
+            .tag-option-list {
+                @apply flex-1 overflow-y-auto scrollbar-thin p-2 flex flex-col gap-1;
+            }
+            .tag-option {
+                @apply flex items-center gap-2 px-2 py-1.5 rounded text-sm cursor-pointer hover:bg-bgPage;
+            }
             .select-full {
                 @apply w-full h-9 border border-borderGray rounded px-3 text-sm text-gray-800 bg-white;
             }
@@ -108,6 +145,12 @@
             }
             .btn-sm {
                 @apply px-3 py-1 border border-borderGray rounded bg-white text-[13px] hover:border-primary hover:text-primary;
+            }
+            .btn-sm:disabled {
+                @apply text-gray-300 border-borderGray cursor-not-allowed;
+            }
+            .btn-sm:disabled:hover {
+                @apply text-gray-300 border-borderGray;
             }
             .help-icon {
                 @apply w-[18px] h-[18px] rounded-full border border-gray-300 inline-flex items-center justify-center text-xs text-gray-400 cursor-pointer;
@@ -2407,13 +2450,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- 选择标签 -->
-                <div class="mb-[18px] flex items-start">
-                    <div class="form-label">选择标签</div>
-                    <div class="flex-1">
-                        <input type="text" class="form-input" placeholder="请选择标签">
-                    </div>
-                </div>
                 <!-- 备注 -->
                 <div class="mb-[18px] flex items-start">
                     <div class="form-label">备注</div>
@@ -2439,16 +2475,19 @@
                     <span class="help-icon">?</span>
                 </div>
                 <!-- 上传状态切换 -->
-                <div class="flex gap-1 mb-2.5">
+                <div class="flex items-center gap-1 mb-2.5">
                     <div class="status-tab">上传中</div>
                     <div class="status-tab active">已上传</div>
                     <div class="status-tab">已上传 / 总上传 1 / 1</div>
+                    <button class="btn-sm ml-auto" id="batchTagBtn" disabled>批量设置标签</button>
                 </div>
                 <!-- 文件列表 -->
                 <table class="file-table">
                     <thead>
                         <tr>
+                            <th><input type="checkbox" id="uploadSelectAll"></th>
                             <th>名称</th>
+                            <th>标签</th>
                             <th>短剧信息</th>
                             <th>尺寸</th>
                             <th>大小</th>
@@ -2457,15 +2496,17 @@
                     </thead>
                     <tbody id="uploadFileBody">
                         <tr>
+                            <td><input type="checkbox" class="row-check"></td>
                             <td>
                                 <img src="https://picsum.photos/id/237/40/40" alt="预览图" class="w-9 h-9 object-cover rounded-sm">
                                 <span class="ml-2 inline-flex flex-col align-middle">
                                     <span class="inline-flex items-center">
-                                        <input type="text" class="file-name-input" value="968_LIHE_EC_ID_LM017_260509_F_F_NU"><span class="file-ext">.mp4</span>
+                                        <input type="text" class="file-name-input" value="546_YUANHUA_EC_TW_N890_260110_MF_AISC_自定义"><span class="file-ext">.mp4</span>
                                     </span>
                                     <span class="dup-hint" hidden></span>
                                 </span>
                             </td>
+                            <td><div class="row-tag-list"></div></td>
                             <td>
                                 <div class="drama-bind" data-row="0">待手动选择</div>
                             </td>
@@ -2481,6 +2522,33 @@
             <div class="px-5 py-4 border-t border-borderGray flex justify-end gap-3">
                 <button class="btn-footer btn-cancel" data-close-upload>取消</button>
                 <button class="btn-footer btn-primary" id="finishUploadBtn">完成</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 修改标签弹窗 ========== -->
+    <div class="modal-mask" id="tagModal" hidden>
+        <div class="modal-panel w-[560px]">
+            <div class="px-5 py-4 flex items-center justify-between border-b border-borderGray">
+                <div class="text-base text-gray-800 font-medium">修改标签</div>
+                <button class="modal-close" data-close-tag>×</button>
+            </div>
+            <div class="p-5">
+                <div class="text-xs text-gray-400 mb-2" id="tagModalHint"></div>
+                <div class="mb-[18px] flex items-start">
+                    <div class="form-label">选择标签</div>
+                    <div class="flex-1">
+                        <div id="tagSelected" class="tag-picker"></div>
+                    </div>
+                </div>
+                <div class="tag-selector">
+                    <div id="tagGroupList" class="tag-group-list"></div>
+                    <div id="tagOptionList" class="tag-option-list"></div>
+                </div>
+            </div>
+            <div class="px-5 py-4 border-t border-borderGray flex justify-end gap-3">
+                <button class="btn-footer btn-cancel" data-close-tag>取消</button>
+                <button class="btn-footer btn-primary" id="confirmTagBtn">确定</button>
             </div>
         </div>
     </div>
@@ -2630,10 +2698,23 @@
         ];
 
         // 模拟"加入文件列表"的文件（mock，真实场景为拖拽 / 选择文件后的读取结果）
+        // 名称遵循新规则：日期后依次为业务类型（MF/FF）与AI素材类型（AISC/MYAISC/NU）
         var MOCK_UPLOAD_FILES = [
             { name: '1204_QIKEYOU_EC_TR_P560_260901_FF_NU_Q.mp4', dim: '1080 * 1920', size: '88MB' },
-            { name: '877_LIHE_EC_ID_LM010_260430_F_F_NU.mp4', dim: '1080 * 1920', size: '102MB' },
-            { name: '1560_LIHE_EC_ID_LM019_260511_F_F_NU.mp4', dim: '1080 * 1920', size: '77MB' }
+            { name: '547_YUANHUA_EC_TW_N890_260110_FF_MYAISC_自定义.mp4', dim: '1080 * 1920', size: '102MB' },
+            { name: '548_YUANHUA_EC_TW_N890_260110_MF_NU_自定义.mp4', dim: '1080 * 1920', size: '77MB' }
+        ];
+
+        // 标签组与标签（mock，接入真实接口时替换）
+        var MOCK_TAG_GROUPS = [
+            { name: '业务类型', tags: [
+                { key: 'biz_free', name: '免费' },
+                { key: 'biz_paid', name: '付费' }
+            ] },
+            { name: 'AI素材', tags: [
+                { key: 'ai_aisc', name: '外部AI素材' },
+                { key: 'ai_myaisc', name: '麦芽AI素材' }
+            ] }
         ];
 
         // ===== 同名判定：去首尾空格 + 忽略大小写，含扩展名 =====
@@ -2755,6 +2836,227 @@
             return !tr.querySelector('.file-name-input').value.trim();
         }
 
+        // ===== 标签解析：日期段后两段依次为业务类型、AI素材类型 =====
+        function tagsFromName(main) {
+            var parts = main.split('_');
+            var dateIdx = -1;
+            for (var i = 0; i < parts.length; i++) {
+                if (/^\d{6}$/.test(parts[i])) { dateIdx = i; break; }
+            }
+            if (dateIdx === -1) { return []; }
+            var biz = (parts[dateIdx + 1] || '').toUpperCase();
+            var ai = (parts[dateIdx + 2] || '').toUpperCase();
+            var tags = [];
+            if (biz === 'MF') { tags.push('biz_free'); }
+            if (biz === 'FF') { tags.push('biz_paid'); }
+            if (ai === 'AISC') { tags.push('ai_aisc'); }
+            if (ai === 'MYAISC') { tags.push('ai_myaisc'); }
+            return tags;
+        }
+
+        // 每个文件行各自保存标签，DOM 为唯一数据源
+        function rowTags(tr) {
+            var raw = tr.getAttribute('data-tags') || '';
+            return raw ? raw.split(',') : [];
+        }
+
+        function setRowTags(tr) {
+            var tags = tagsFromName(tr.querySelector('.file-name-input').value.trim());
+            tr.setAttribute('data-tags', normalizeTags(tags).join(','));
+        }
+
+        // 标签统一按标签组定义顺序排列，避免批量增删后顺序跳动
+        function normalizeTags(tags) {
+            var ordered = [];
+            MOCK_TAG_GROUPS.forEach(function (group) {
+                group.tags.forEach(function (tag) {
+                    if (tags.indexOf(tag.key) !== -1) { ordered.push(tag.key); }
+                });
+            });
+            return ordered;
+        }
+
+        // 文件名变更时：未被手动改过标签的行继续跟随文件名解析
+        function onRowNameInput(tr) {
+            if (tr.getAttribute('data-tag-edited') !== '1') { setRowTags(tr); }
+            renderRowTags(tr);
+            refreshDupMarks();
+        }
+
+        function tagNameOf(key) {
+            for (var i = 0; i < MOCK_TAG_GROUPS.length; i++) {
+                var group = MOCK_TAG_GROUPS[i];
+                for (var j = 0; j < group.tags.length; j++) {
+                    if (group.tags[j].key === key) { return group.tags[j].name; }
+                }
+            }
+            return '';
+        }
+
+        // 文件行的标签列：chips + 修改入口
+        function renderRowTags(tr) {
+            var list = tr.querySelector('.row-tag-list');
+            if (!list) { return; }
+            var html = rowTags(tr).map(function (key) {
+                return '<span class="tag-chip">' + tagNameOf(key) +
+                    '<i class="fa fa-times tag-chip-del" data-tag-key="' + key + '"></i></span>';
+            }).join('');
+            if (!html) { html = '<span class="text-xs text-gray-400">未识别</span>'; }
+            list.innerHTML = html + '<span class="row-tag-edit">修改</span>';
+        }
+
+        function updateBatchTagBtn() {
+            var checks = Array.prototype.slice.call(document.querySelectorAll('.row-check'));
+            var selected = checks.filter(function (cb) { return cb.checked; });
+            document.getElementById('batchTagBtn').disabled = selected.length === 0;
+            var selectAll = document.getElementById('uploadSelectAll');
+            selectAll.checked = checks.length > 0 && selected.length === checks.length;
+            selectAll.indeterminate = selected.length > 0 && selected.length < checks.length;
+        }
+
+        // ===== 标签弹窗：单素材 / 批量共用，两层结构 =====
+        var tagModal = document.getElementById('tagModal');
+        var tagEditRows = [];
+        var tagInitial = {};
+        var tagPending = {};
+        var tagActiveGroup = 0;
+
+        function tagStateOf(key, rows) {
+            var count = rows.filter(function (tr) {
+                return rowTags(tr).indexOf(key) !== -1;
+            }).length;
+            if (!count) { return 'none'; }
+            return count === rows.length ? 'all' : 'some';
+        }
+
+        function openTagModal(rows) {
+            if (!rows.length) { return; }
+            tagEditRows = rows;
+            tagInitial = {};
+            tagPending = {};
+            MOCK_TAG_GROUPS.forEach(function (group) {
+                group.tags.forEach(function (tag) {
+                    tagInitial[tag.key] = tagStateOf(tag.key, rows);
+                    tagPending[tag.key] = tagInitial[tag.key];
+                });
+            });
+            tagActiveGroup = 0;
+            for (var gi = 0; gi < MOCK_TAG_GROUPS.length; gi++) {
+                var hasTag = MOCK_TAG_GROUPS[gi].tags.some(function (tag) {
+                    return tagPending[tag.key] !== 'none';
+                });
+                if (hasTag) { tagActiveGroup = gi; break; }
+            }
+            document.getElementById('tagModalHint').textContent = rows.length > 1
+                ? '已选 ' + rows.length + ' 个素材：勾选/取消将对选中素材批量增删'
+                : '当前素材：' + rows[0].querySelector('.file-name-input').value.trim();
+            renderTagModal();
+            tagModal.hidden = false;
+        }
+
+        function renderTagModal() {
+            var selected = [];
+            MOCK_TAG_GROUPS.forEach(function (group) {
+                group.tags.forEach(function (tag) {
+                    if (tagPending[tag.key] !== 'none') { selected.push(tag.name); }
+                });
+            });
+            document.getElementById('tagSelected').innerHTML = selected.length
+                ? selected.map(function (name) { return '<span class="tag-chip">' + name + '</span>'; }).join('')
+                : '<span class="tag-picker-empty">请选择标签</span>';
+
+            document.getElementById('tagGroupList').innerHTML = MOCK_TAG_GROUPS.map(function (group, gi) {
+                return '<div class="tag-group-item' + (gi === tagActiveGroup ? ' active' : '') +
+                    '" data-group-index="' + gi + '">' + group.name + '</div>';
+            }).join('');
+
+            var group = MOCK_TAG_GROUPS[tagActiveGroup];
+            document.getElementById('tagOptionList').innerHTML = group.tags.map(function (tag) {
+                var state = tagPending[tag.key];
+                return '<label class="tag-option">' +
+                    '<input type="checkbox" data-tag-key="' + tag.key + '"' + (state !== 'none' ? ' checked' : '') + '>' +
+                    '<span>' + tag.name + '</span>' +
+                    '</label>';
+            }).join('');
+            document.querySelectorAll('#tagOptionList input[data-tag-key]').forEach(function (cb) {
+                cb.indeterminate = tagPending[cb.getAttribute('data-tag-key')] === 'some';
+            });
+        }
+
+        function applyTagModal() {
+            tagEditRows.forEach(function (tr) {
+                var tags = rowTags(tr);
+                MOCK_TAG_GROUPS.forEach(function (group) {
+                    group.tags.forEach(function (tag) {
+                        if (tagInitial[tag.key] === tagPending[tag.key]) { return; }
+                        if (tagPending[tag.key] === 'all' && tags.indexOf(tag.key) === -1) { tags.push(tag.key); }
+                        if (tagPending[tag.key] === 'none') {
+                            tags = tags.filter(function (key) { return key !== tag.key; });
+                        }
+                    });
+                });
+                tr.setAttribute('data-tags', normalizeTags(tags).join(','));
+                tr.setAttribute('data-tag-edited', '1');
+                renderRowTags(tr);
+            });
+            tagModal.hidden = true;
+            updateBatchTagBtn();
+        }
+
+        document.getElementById('tagGroupList').addEventListener('click', function (e) {
+            var item = e.target.closest && e.target.closest('[data-group-index]');
+            if (!item) { return; }
+            tagActiveGroup = parseInt(item.getAttribute('data-group-index'), 10);
+            renderTagModal();
+        });
+
+        document.getElementById('tagOptionList').addEventListener('change', function (e) {
+            var cb = e.target;
+            if (!cb || !cb.getAttribute || !cb.getAttribute('data-tag-key')) { return; }
+            var key = cb.getAttribute('data-tag-key');
+            tagPending[key] = tagPending[key] === 'none' ? 'all' : (tagPending[key] === 'all' ? 'none' : 'all');
+            renderTagModal();
+        });
+
+        document.getElementById('confirmTagBtn').addEventListener('click', applyTagModal);
+        document.querySelectorAll('[data-close-tag]').forEach(function (btn) {
+            btn.addEventListener('click', function () { tagModal.hidden = true; });
+        });
+
+        // 文件行标签：删除单条 / 打开修改弹窗
+        document.getElementById('uploadFileBody').addEventListener('click', function (e) {
+            var del = e.target.closest && e.target.closest('.tag-chip-del');
+            if (del) {
+                var tr = del.closest('tr');
+                var key = del.getAttribute('data-tag-key');
+                tr.setAttribute('data-tags', normalizeTags(rowTags(tr).filter(function (k) { return k !== key; })).join(','));
+                tr.setAttribute('data-tag-edited', '1');
+                renderRowTags(tr);
+                return;
+            }
+            var edit = e.target.closest && e.target.closest('.row-tag-edit');
+            if (edit) { openTagModal([edit.closest('tr')]); }
+        });
+
+        // 行复选框 / 全选 / 批量设置标签
+        document.getElementById('uploadFileBody').addEventListener('change', function (e) {
+            if (e.target.classList && e.target.classList.contains('row-check')) {
+                updateBatchTagBtn();
+            }
+        });
+        document.getElementById('uploadSelectAll').addEventListener('change', function () {
+            var checked = this.checked;
+            document.querySelectorAll('.row-check').forEach(function (cb) { cb.checked = checked; });
+            updateBatchTagBtn();
+        });
+        document.getElementById('batchTagBtn').addEventListener('click', function () {
+            var rows = Array.prototype.slice.call(document.querySelectorAll('.row-check:checked')).map(function (cb) {
+                return cb.closest('tr');
+            });
+            if (!rows.length) { return; }
+            openTagModal(rows);
+        });
+
         // 冲突行：主名为空，或与全库已有素材 / 本批内其他行同名
         function collectDupRows() {
             var rows = Array.prototype.slice.call(document.querySelectorAll('#uploadFileBody tr'));
@@ -2793,6 +3095,7 @@
             var main = dot > 0 ? file.name.slice(0, dot) : file.name;
             var tr = document.createElement('tr');
             tr.innerHTML =
+                '<td><input type="checkbox" class="row-check"></td>' +
                 '<td>' +
                     '<img src="https://picsum.photos/id/237/40/40" alt="预览图" class="w-9 h-9 object-cover rounded-sm">' +
                     '<span class="ml-2 inline-flex flex-col align-middle">' +
@@ -2803,14 +3106,20 @@
                         '<span class="dup-hint" hidden></span>' +
                     '</span>' +
                 '</td>' +
+                '<td><div class="row-tag-list"></div></td>' +
                 '<td><div class="drama-bind" data-row="' + (uploadRowSeq++) + '">待手动选择</div></td>' +
                 '<td>' + file.dim + '</td>' +
                 '<td>' + file.size + '</td>' +
                 '<td><button class="del-btn text-danger text-base cursor-pointer">🗑</button></td>';
             document.getElementById('uploadFileBody').appendChild(tr);
             bindDramaCell(tr.querySelector('.drama-bind'));
-            tr.querySelector('.file-name-input').addEventListener('input', refreshDupMarks);
+            setRowTags(tr);
+            renderRowTags(tr);
+            tr.querySelector('.file-name-input').addEventListener('input', function () {
+                onRowNameInput(tr);
+            });
             refreshDupMarks();
+            updateBatchTagBtn();
         }
 
         // ===== 完成上传：检查未绑定素材 =====
@@ -2845,8 +3154,15 @@
         });
         document.querySelectorAll('.drama-bind').forEach(bindDramaCell);
         document.querySelectorAll('#uploadFileBody .file-name-input').forEach(function (input) {
-            input.addEventListener('input', refreshDupMarks);
+            input.addEventListener('input', function () {
+                onRowNameInput(input.closest('tr'));
+            });
         });
+        document.querySelectorAll('#uploadFileBody tr').forEach(function (tr) {
+            setRowTags(tr);
+            renderRowTags(tr);
+        });
+        updateBatchTagBtn();
         document.querySelector('.drop-area').addEventListener('click', appendFileRow);
         document.getElementById('uploadFolderBtn').addEventListener('click', appendFileRow);
         document.getElementById('uploadFileBtn').addEventListener('click', appendFileRow);
