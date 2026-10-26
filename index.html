@@ -200,6 +200,28 @@
             .file-ext {
                 @apply text-[13px] text-gray-400;
             }
+            .file-thumb {
+                @apply object-cover rounded-sm;
+            }
+            .file-thumb-video {
+                @apply w-9 h-9;
+            }
+            .file-thumb-image {
+                @apply w-9;
+                height: 45px;
+            }
+            .type-badge {
+                @apply ml-1 px-1 rounded text-[11px] leading-4;
+            }
+            .type-badge-video {
+                @apply bg-gray-100 text-gray-600;
+            }
+            .type-badge-image {
+                @apply bg-tagGreen text-gray-700;
+            }
+            .spec-hint {
+                @apply mb-2 text-xs text-danger;
+            }
             .dup-hint {
                 @apply mt-0.5 text-xs text-danger;
             }
@@ -255,6 +277,11 @@
             <input type="text" class="border border-borderGray rounded px-2 py-1 ml-1 w-40" placeholder="请输入素材名称">
             <button class="border border-borderGray rounded px-2 py-1 ml-1"><i class="fa fa-search"></i></button>
         </div>
+        <select id="batchFormFilter" class="border border-borderGray rounded px-2 py-1">
+            <option value="all">素材形式：全部</option>
+            <option value="video">素材形式：视频</option>
+            <option value="image">素材形式：图片</option>
+        </select>
         <select class="border border-borderGray rounded px-2 py-1">
             <option>选择用户</option>
         </select>
@@ -405,7 +432,7 @@
             </div>
             <!-- 素材卡片网格 -->
             <div class="flex-1 overflow-y-auto scrollbar-thin p-4">
-                <div class="grid grid-cols-5 gap-4">
+                <div id="batchCardGrid" class="grid grid-cols-5 gap-4">
                     <!-- 素材卡片 1 -->
                     <div class="bg-white rounded border border-borderGray overflow-hidden">
                         <div class="relative">
@@ -527,6 +554,40 @@
                         </div>
                     </div>
                     <!-- 第二行卡片继续复制上面结构即可 -->
+                    <div class="bg-white rounded border border-borderGray overflow-hidden" data-type="image">
+                        <div class="relative">
+                            <input type="checkbox" class="absolute top-1 left-1 z-10">
+                            <div class="w-full bg-gray-200" style="aspect-ratio:4/5">
+                                <img src="https://picsum.photos/id/1015/400/500" class="w-full h-full object-cover">
+                            </div>
+                            <div class="absolute top-1 right-1 bg-tagGreen text-gray-700 px-1 rounded text-xs">图片</div>
+                        </div>
+                        <div class="p-2">
+                            <div class="text-xs text-gray-600">1440 * 1800</div>
+                            <div class="text-xs text-purple-600">546_YUANHUA_EC_TW_N890_261026_MF_AISC_封面</div>
+                            <div class="mt-2 flex justify-between">
+                                <span class="bg-tagOrange px-1 rounded text-xs">椿芽</span>
+                                <span class="bg-tagGreen px-1 rounded text-xs">2026-10-26 10:20:00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded border border-borderGray overflow-hidden" data-type="image">
+                        <div class="relative">
+                            <input type="checkbox" class="absolute top-1 left-1 z-10">
+                            <div class="w-full bg-gray-200" style="aspect-ratio:4/5">
+                                <img src="https://picsum.photos/id/1025/400/500" class="w-full h-full object-cover">
+                            </div>
+                            <div class="absolute top-1 right-1 bg-tagGreen text-gray-700 px-1 rounded text-xs">图片</div>
+                        </div>
+                        <div class="p-2">
+                            <div class="text-xs text-gray-600">1080 * 1350</div>
+                            <div class="text-xs text-purple-600">547_LIHE_EC_ID_LM021_261026_FF_MYAISC_横版</div>
+                            <div class="mt-2 flex justify-between">
+                                <span class="bg-tagOrange px-1 rounded text-xs">繁星</span>
+                                <span class="bg-tagGreen px-1 rounded text-xs">2026-10-26 10:21:00</span>
+                            </div>
+                        </div>
+                    </div>
                     <div class="bg-white rounded border border-borderGray overflow-hidden">
                         <div class="relative">
                             <input type="checkbox" class="absolute top-1 left-1 z-10">
@@ -2466,7 +2527,7 @@
                 <div class="drop-area">
                     <div class="text-4xl mb-3 opacity-60">☁️</div>
                     <div>将文件或拖到此处，或点击上传文件</div>
-                    <div class="mt-1.5">仅支持图片和视频文件</div>
+                    <div class="mt-1.5">图片支持 JPG/PNG，4:5，≤30MB；视频支持 mp4/mov</div>
                 </div>
                 <!-- 上传按钮组 -->
                 <div class="flex gap-2 mb-3">
@@ -2474,6 +2535,7 @@
                     <button class="btn-sm" id="uploadFileBtn">上传素材</button>
                     <span class="help-icon">?</span>
                 </div>
+                <div id="uploadSpecHint" class="spec-hint" hidden></div>
                 <!-- 上传状态切换 -->
                 <div class="flex items-center gap-1 mb-2.5">
                     <div class="status-tab">上传中</div>
@@ -2495,13 +2557,13 @@
                         </tr>
                     </thead>
                     <tbody id="uploadFileBody">
-                        <tr>
+                        <tr data-type="video">
                             <td><input type="checkbox" class="row-check"></td>
                             <td>
-                                <img src="https://picsum.photos/id/237/40/40" alt="预览图" class="w-9 h-9 object-cover rounded-sm">
+                                <img src="https://picsum.photos/id/237/40/40" alt="预览图" class="file-thumb file-thumb-video">
                                 <span class="ml-2 inline-flex flex-col align-middle">
                                     <span class="inline-flex items-center">
-                                        <input type="text" class="file-name-input" value="546_YUANHUA_EC_TW_N890_260110_MF_AISC_自定义"><span class="file-ext">.mp4</span>
+                                        <input type="text" class="file-name-input" value="546_YUANHUA_EC_TW_N890_260110_MF_AISC_自定义"><span class="file-ext">.mp4</span><span class="type-badge type-badge-video">视频</span>
                                     </span>
                                     <span class="dup-hint" hidden></span>
                                 </span>
@@ -2702,7 +2764,10 @@
         var MOCK_UPLOAD_FILES = [
             { name: '1204_QIKEYOU_EC_TR_P560_260901_FF_NU_Q.mp4', dim: '1080 * 1920', size: '88MB' },
             { name: '547_YUANHUA_EC_TW_N890_260110_FF_MYAISC_自定义.mp4', dim: '1080 * 1920', size: '102MB' },
-            { name: '548_YUANHUA_EC_TW_N890_260110_MF_NU_自定义.mp4', dim: '1080 * 1920', size: '77MB' }
+            { name: '548_YUANHUA_EC_TW_N890_260110_MF_NU_自定义.mp4', dim: '1080 * 1920', size: '77MB' },
+            { name: '1561_QIKEYOU_EC_TR_P571_261026_MF_AISC_封面.jpg', dim: '1440 * 1800', size: '6.2MB' },
+            { name: '1562_LIHE_EC_ID_LM021_261026_FF_MYAISC_横版.png', dim: '1080 * 1350', size: '4.8MB' },
+            { name: '1563_QIKEYOU_EC_TR_P571_261026_MF_NU_比例不符.jpg', dim: '1080 * 1920', size: '5.1MB' }
         ];
 
         // 标签组与标签（mock，接入真实接口时替换）
@@ -3088,20 +3153,59 @@
             cell.addEventListener('click', function () { openDramaModal(cell); });
         }
 
+        function isImageExt(ext) {
+            ext = (ext || '').toLowerCase();
+            return ext === '.jpg' || ext === '.jpeg' || ext === '.png';
+        }
+
+        function imageSpecError(file) {
+            var dim = /^(\d+)\s*\*\s*(\d+)$/.exec(file.dim || '');
+            if (!dim) { return '无法读取图片尺寸'; }
+            var w = +dim[1], h = +dim[2];
+            var ratio = h ? w / h : 0;
+            if (ratio < 0.776 || ratio > 0.824) { return '宽高比需为 4:5'; }
+            if (w < 600 || h < 750) { return '尺寸需不小于 600×750'; }
+            var mb = parseFloat(file.size);
+            if (!isNaN(mb) && mb > 30) { return '体积需不超过 30MB'; }
+            return '';
+        }
+
+        function showSpecHint(msg) {
+            var el = document.getElementById('uploadSpecHint');
+            el.textContent = '1 个文件不符合图片规格：' + msg;
+            el.hidden = false;
+        }
+
+        function hideSpecHint() {
+            document.getElementById('uploadSpecHint').hidden = true;
+        }
+
         function appendFileRow() {
             var file = MOCK_UPLOAD_FILES[uploadFileCursor % MOCK_UPLOAD_FILES.length];
             uploadFileCursor++;
             var dot = file.name.lastIndexOf('.');
             var main = dot > 0 ? file.name.slice(0, dot) : file.name;
+            var ext = extOf(file.name);
+            var isImage = isImageExt(ext);
+            if (isImage) {
+                var specErr = imageSpecError(file);
+                if (specErr) {
+                    showSpecHint(specErr);
+                    return;
+                }
+            }
+            hideSpecHint();
             var tr = document.createElement('tr');
+            tr.setAttribute('data-type', isImage ? 'image' : 'video');
             tr.innerHTML =
                 '<td><input type="checkbox" class="row-check"></td>' +
                 '<td>' +
-                    '<img src="https://picsum.photos/id/237/40/40" alt="预览图" class="w-9 h-9 object-cover rounded-sm">' +
+                    '<img src="' + (isImage ? 'https://picsum.photos/id/1015/40/50' : 'https://picsum.photos/id/237/40/40') + '" alt="预览图" class="file-thumb ' + (isImage ? 'file-thumb-image' : 'file-thumb-video') + '">' +
                     '<span class="ml-2 inline-flex flex-col align-middle">' +
                         '<span class="inline-flex items-center">' +
                             '<input type="text" class="file-name-input" value="' + main + '">' +
-                            '<span class="file-ext">' + extOf(file.name) + '</span>' +
+                            '<span class="file-ext">' + ext + '</span>' +
+                            '<span class="type-badge ' + (isImage ? 'type-badge-image' : 'type-badge-video') + '">' + (isImage ? '图片' : '视频') + '</span>' +
                         '</span>' +
                         '<span class="dup-hint" hidden></span>' +
                     '</span>' +
@@ -3523,6 +3627,20 @@
             var el = e.target.closest && e.target.closest('[data-full-name]');
             if (el) { nameTip.hidden = true; }
         });
+
+        // ===== 批量素材库：素材形式筛选 =====
+        (function initBatchFormFilter() {
+            var sel = document.getElementById('batchFormFilter');
+            var grid = document.getElementById('batchCardGrid');
+            if (!sel || !grid) { return; }
+            sel.addEventListener('change', function () {
+                var form = sel.value;
+                Array.prototype.forEach.call(grid.children, function (card) {
+                    var type = card.getAttribute('data-type') || 'video';
+                    card.hidden = form !== 'all' && type !== form;
+                });
+            });
+        })();
 
         filterAiCards();
         initSelects();
