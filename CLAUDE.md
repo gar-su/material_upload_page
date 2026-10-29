@@ -80,7 +80,7 @@ Tailwind CDN + `<style type="text/tailwindcss">` 的 `@layer utilities` / `@laye
 | 文档 | 覆盖内容 | 代码入口 |
 | ---- | ---- | ---- |
 | `需求文档.md` | 上传弹窗短剧绑定、未绑定拦截、同名素材拦截 | `#uploadModal` / `#dramaModal` / `#unboundModal` / `#dupModal`、`bindMap`、`confirmDrama()`、`refreshDramaOptions()`、`onFinishUpload()`、`isDupName()` / `collectDupRows()` / `refreshDupMarks()`、`appendFileRow()` |
-| `AI素材库需求文档.md` | AI素材库 tab、素材类型筛选、分页、批量命名与同步 | `#page-ai` / `#syncModal`、`filterAiCards()` / `renderAiPage()` / `renderAiPager()`（筛选 + 分页）、`updateAiSelection()` / `renderAiSelected()`（右侧已选栏）、`setVisiblePicks()`、`findSeedSegment()` / `buildSyncedName()` / `stripExt()` |
+| `AI素材库需求文档.md` | AI素材库 tab、素材类型筛选、分页、批量命名与同步 | `#page-ai` / `#syncModal`、`filterAiCards()` / `renderAiPage()` / `renderAiPager()`（筛选 + 分页）、`updateAiSelection()` / `renderAiSelected()`（右侧已选栏）、`setVisiblePicks()`、`findSeedSegment()` / `buildSyncedName()` / `stripExt()`、`renderSyncPreview()`（命名预览 + 按同步后名称解析的标签列） |
 | `未绑定素材自动绑定需求文档.md` | 后端定时任务补绑 | 无前端改动（明确要求 upload 页零改动） |
 | `素材命名与标签自动填充需求文档.md` | 新命名规则、上传标签自动填充、素材维度标签与批量设置、近一个月数据清洗 | `#tagModal`、`#uploadFileBody tr[data-tags]`、`.row-tag-edit`、`#batchTagBtn`、`tagsFromName()` / `setRowTags()` / `renderRowTags()` / `openTagModal()` / `renderTagModal()` / `applyTagModal()` / `updateBatchTagBtn()` |
 | `重名素材拦截需求文档.md` | 素材名全库唯一的判定口径、两个入口（上传页 / AI素材库同步）的拦截与查名接口 | 同上两处，判定口径的唯一权威来源 |

@@ -2713,6 +2713,7 @@
                         <tr>
                             <th>原名称</th>
                             <th>同步后名称</th>
+                            <th>标签</th>
                         </tr>
                     </thead>
                     <tbody id="syncPreview"></tbody>
@@ -3514,9 +3515,16 @@
             syncPreview.innerHTML = aiSelected.slice(0, PREVIEW_LIMIT).map(function (cb, i) {
                 var origin = stripExt(cb.getAttribute('data-name'));
                 var next = seg ? buildSyncedName(seed, seg, i) : '—';
+                // 标签按同步后名称解析：与写入素材库的最终名称保持一致
+                var tags = normalizeTags(tagsFromName(next));
+                var tagHtml = tags.map(function (key) {
+                    return '<span class="tag-chip">' + tagNameOf(key) + '</span>';
+                }).join('');
+                if (!tagHtml) { tagHtml = '<span class="text-xs text-gray-400">未识别</span>'; }
                 return '<tr>' +
-                    '<td><div class="truncate max-w-[280px]" data-full-name="' + origin + '">' + origin + '</div></td>' +
-                    '<td class="text-primary"><div class="truncate max-w-[280px]" data-full-name="' + next + '">' + next + '</div></td>' +
+                    '<td><div class="truncate max-w-[220px]" data-full-name="' + origin + '">' + origin + '</div></td>' +
+                    '<td class="text-primary"><div class="truncate max-w-[220px]" data-full-name="' + next + '">' + next + '</div></td>' +
+                    '<td><div class="row-tag-list">' + tagHtml + '</div></td>' +
                     '</tr>';
             }).join('');
             var more = aiSelected.length - PREVIEW_LIMIT;
