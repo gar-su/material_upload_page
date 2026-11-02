@@ -253,6 +253,130 @@
             .btn-primary {
                 @apply bg-primary border border-primary text-white;
             }
+            /* ===== 去剧名：已选列表 / 蒙层 / 裁剪 ===== */
+            .rename-item {
+                @apply flex gap-2 p-2 rounded border border-transparent cursor-pointer hover:bg-bgPage;
+            }
+            .rename-item.active {
+                @apply bg-bgPage border-primary;
+            }
+            .rename-thumb {
+                @apply relative w-[52px] h-[52px] rounded overflow-hidden bg-gray-200 shrink-0;
+            }
+            .rename-thumb img {
+                @apply w-full h-full object-cover;
+            }
+            .rename-thumb-badge {
+                @apply absolute bottom-0 right-0 bg-black/60 text-white text-[10px] leading-4 px-1 rounded-tl;
+            }
+            .rename-name-input {
+                @apply w-full h-7 min-w-0 border border-borderGray rounded px-1.5 text-xs text-gray-700;
+            }
+            .rename-name-input.dup {
+                @apply border-danger text-danger;
+            }
+            .rename-ext {
+                @apply text-xs text-gray-400 shrink-0;
+            }
+            .rename-trim-input {
+                @apply w-14 h-6 border border-borderGray rounded px-1 text-xs text-gray-700;
+            }
+            .rename-trim-input.dup {
+                @apply border-danger text-danger;
+            }
+            .rename-row-error {
+                @apply mt-1 text-xs text-danger;
+            }
+            .mask-stage {
+                @apply relative bg-gray-200 rounded overflow-hidden select-none cursor-crosshair;
+                width: fit-content;
+                min-width: 200px;
+                min-height: 380px;
+                max-width: 100%;
+                align-self: center;
+                flex-shrink: 0;
+            }
+            .mask-stage img {
+                @apply block pointer-events-none;
+                height: 380px;
+                width: auto;
+                max-width: 100%;
+            }
+            .mask-layer {
+                @apply absolute inset-0 pointer-events-none;
+            }
+            .mask-region {
+                @apply absolute pointer-events-none;
+                background-image: repeating-conic-gradient(#a3aab3 0% 25%, #6b7280 0% 50%);
+                background-size: 10px 10px;
+                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+            }
+            .mask-region.is-editable {
+                @apply pointer-events-auto cursor-move;
+            }
+            .mask-del {
+                @apply absolute top-0.5 left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-black/60 text-white text-xs leading-5 text-center cursor-pointer;
+            }
+            .mask-handle {
+                @apply absolute w-2 h-2 bg-white border border-gray-500 rounded-sm;
+            }
+            .mask-handle[data-handle="nw"] {
+                @apply top-0 left-0 cursor-nwse-resize;
+            }
+            .mask-handle[data-handle="ne"] {
+                @apply top-0 right-0 cursor-nesw-resize;
+            }
+            .mask-handle[data-handle="sw"] {
+                @apply bottom-0 left-0 cursor-nesw-resize;
+            }
+            .mask-handle[data-handle="se"] {
+                @apply bottom-0 right-0 cursor-nwse-resize;
+            }
+            .mask-drawing {
+                @apply opacity-80;
+            }
+            /* ===== Toast ===== */
+            .toast-wrap {
+                @apply fixed top-4 left-1/2 -translate-x-1/2 z-[1500] flex flex-col items-center gap-2 pointer-events-none;
+            }
+            .toast {
+                @apply pointer-events-none flex items-start gap-2 bg-white border border-borderGray rounded shadow-modal px-4 py-2 text-sm text-gray-800;
+                min-width: 260px;
+                max-width: 560px;
+                animation: toast-in 0.18s ease-out;
+            }
+            .toast-success {
+                @apply border-l-4 border-l-green-500;
+            }
+            .toast-warning {
+                @apply border-l-4 border-l-orange-500;
+            }
+            .toast-error {
+                @apply border-l-4 border-l-red-500;
+            }
+            .toast-info {
+                @apply border-l-4 border-l-primary;
+            }
+            /* ===== 生成状态 ===== */
+            .gen-status {
+                @apply inline-flex items-center px-1.5 py-0.5 rounded text-xs whitespace-nowrap;
+            }
+            .gen-status-queued {
+                @apply bg-gray-100 text-gray-600;
+            }
+            .gen-status-processing {
+                @apply bg-blue-50 text-primary;
+            }
+            .gen-status-success {
+                @apply bg-tagGreen text-gray-700;
+            }
+            .gen-status-failed {
+                @apply bg-red-50 text-danger;
+            }
+        }
+        @keyframes toast-in {
+            from { transform: translateY(-6px); }
+            to { transform: translateY(0); }
         }
     </style>
 </head>
@@ -418,6 +542,8 @@
                     <button class="border border-borderGray rounded px-3 py-1">新建</button>
                     <button class="border border-borderGray rounded px-3 py-1">设置权限</button>
                     <button class="border border-borderGray rounded px-3 py-1">批量下载</button>
+                    <button id="renameBtn" class="border border-borderGray rounded px-3 py-1 disabled:opacity-50 disabled:cursor-not-allowed" disabled>去剧名</button>
+                    <button id="renameLogBtn" class="border border-borderGray rounded px-3 py-1">生成日志</button>
                     <button class="border border-borderGray rounded px-3 py-1">批量设置标签</button>
                     <button class="border border-borderGray rounded px-3 py-1">批量设置短剧</button>
                     <button class="border border-borderGray rounded px-3 py-1">批量转移素材</button>
@@ -427,8 +553,15 @@
                 <div class="text-primary cursor-pointer">刷新</div>
             </div>
             <!-- 素材列表信息 -->
-            <div class="px-4 py-1 text-gray-600">
-                <input type="checkbox"> 全选 已选0个素材 麦芽传媒（共2134559个素材）
+            <div class="px-4 py-1 text-gray-600 flex flex-wrap items-center gap-1">
+                <input type="checkbox" id="batchSelectAll"> <span class="ml-1">全选</span>
+                <span id="batchSelectedCount" class="ml-2">已选0个素材</span>
+                <span class="ml-2">麦芽传媒（共2134559个素材）</span>
+                <span id="generationStatus" class="ml-2 inline-flex items-center gap-1" hidden>
+                    <span class="text-gray-500">最近任务</span>
+                    <span id="generationBatch" class="text-gray-700"></span>
+                    <span id="generationState" class="gen-status gen-status-queued">排队中</span>
+                </span>
             </div>
             <!-- 素材卡片网格 -->
             <div class="flex-1 overflow-y-auto scrollbar-thin p-4">
@@ -437,8 +570,8 @@
                     <div class="bg-white rounded border border-borderGray overflow-hidden">
                         <div class="relative">
                             <input type="checkbox" class="absolute top-1 left-1 z-10">
-                            <div class="h-36 bg-gray-200 flex items-center justify-center">
-                                <img src="https://picsum.photos/id/1005/200/144" class="w-full h-full object-cover">
+                            <div class="w-full bg-gray-200" style="aspect-ratio:9/16">
+                                <img src="https://picsum.photos/id/1005/200/356" class="w-full h-full object-cover">
                                 <div class="absolute inset-0 flex items-center justify-center">
                                     <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
                                         <i class="fa fa-play"></i>
@@ -461,8 +594,8 @@
                     <div class="bg-white rounded border border-borderGray overflow-hidden">
                         <div class="relative">
                             <input type="checkbox" class="absolute top-1 left-1 z-10">
-                            <div class="h-36 bg-gray-200 flex items-center justify-center">
-                                <img src="https://picsum.photos/id/1070/200/144" class="w-full h-full object-cover">
+                            <div class="w-full bg-gray-200" style="aspect-ratio:9/16">
+                                <img src="https://picsum.photos/id/1070/200/356" class="w-full h-full object-cover">
                                 <div class="absolute inset-0 flex items-center justify-center">
                                     <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
                                         <i class="fa fa-play"></i>
@@ -485,8 +618,8 @@
                     <div class="bg-white rounded border border-borderGray overflow-hidden">
                         <div class="relative">
                             <input type="checkbox" class="absolute top-1 left-1 z-10">
-                            <div class="h-36 bg-gray-200 flex items-center justify-center">
-                                <img src="https://picsum.photos/id/1048/200/144" class="w-full h-full object-cover">
+                            <div class="w-full bg-gray-200" style="aspect-ratio:9/16">
+                                <img src="https://picsum.photos/id/1048/200/356" class="w-full h-full object-cover">
                                 <div class="absolute inset-0 flex items-center justify-center">
                                     <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
                                         <i class="fa fa-play"></i>
@@ -509,8 +642,8 @@
                     <div class="bg-white rounded border border-borderGray overflow-hidden">
                         <div class="relative">
                             <input type="checkbox" class="absolute top-1 left-1 z-10">
-                            <div class="h-36 bg-gray-200 flex items-center justify-center">
-                                <img src="https://picsum.photos/id/1027/200/144" class="w-full h-full object-cover">
+                            <div class="w-full bg-gray-200" style="aspect-ratio:9/16">
+                                <img src="https://picsum.photos/id/1027/200/356" class="w-full h-full object-cover">
                                 <div class="absolute inset-0 flex items-center justify-center">
                                     <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
                                         <i class="fa fa-play"></i>
@@ -533,8 +666,8 @@
                     <div class="bg-white rounded border border-borderGray overflow-hidden">
                         <div class="relative">
                             <input type="checkbox" class="absolute top-1 left-1 z-10">
-                            <div class="h-36 bg-gray-200 flex items-center justify-center">
-                                <img src="https://picsum.photos/id/1060/200/144" class="w-full h-full object-cover">
+                            <div class="w-full bg-gray-200" style="aspect-ratio:9/16">
+                                <img src="https://picsum.photos/id/1060/200/356" class="w-full h-full object-cover">
                                 <div class="absolute inset-0 flex items-center justify-center">
                                     <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
                                         <i class="fa fa-play"></i>
@@ -591,8 +724,8 @@
                     <div class="bg-white rounded border border-borderGray overflow-hidden">
                         <div class="relative">
                             <input type="checkbox" class="absolute top-1 left-1 z-10">
-                            <div class="h-36 bg-gray-200 flex items-center justify-center">
-                                <img src="https://picsum.photos/id/1005/200/144" class="w-full h-full object-cover">
+                            <div class="w-full bg-gray-200" style="aspect-ratio:9/16">
+                                <img src="https://picsum.photos/id/1005/200/356" class="w-full h-full object-cover">
                                 <div class="absolute inset-0 flex items-center justify-center">
                                     <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
                                         <i class="fa fa-play"></i>
@@ -614,8 +747,8 @@
                     <div class="bg-white rounded border border-borderGray overflow-hidden">
                         <div class="relative">
                             <input type="checkbox" class="absolute top-1 left-1 z-10">
-                            <div class="h-36 bg-gray-200 flex items-center justify-center">
-                                <img src="https://picsum.photos/id/1071/200/144" class="w-full h-full object-cover">
+                            <div class="w-full bg-gray-200" style="aspect-ratio:9/16">
+                                <img src="https://picsum.photos/id/1071/200/356" class="w-full h-full object-cover">
                                 <div class="absolute inset-0 flex items-center justify-center">
                                     <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
                                         <i class="fa fa-play"></i>
@@ -637,8 +770,8 @@
                     <div class="bg-white rounded border border-borderGray overflow-hidden">
                         <div class="relative">
                             <input type="checkbox" class="absolute top-1 left-1 z-10">
-                            <div class="h-36 bg-gray-200 flex items-center justify-center">
-                                <img src="https://picsum.photos/id/1031/200/144" class="w-full h-full object-cover">
+                            <div class="w-full bg-gray-200" style="aspect-ratio:9/16">
+                                <img src="https://picsum.photos/id/1031/200/356" class="w-full h-full object-cover">
                                 <div class="absolute inset-0 flex items-center justify-center">
                                     <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
                                         <i class="fa fa-play"></i>
@@ -660,8 +793,8 @@
                     <div class="bg-white rounded border border-borderGray overflow-hidden">
                         <div class="relative">
                             <input type="checkbox" class="absolute top-1 left-1 z-10">
-                            <div class="h-36 bg-gray-200 flex items-center justify-center">
-                                <img src="https://picsum.photos/id/1011/200/144" class="w-full h-full object-cover">
+                            <div class="w-full bg-gray-200" style="aspect-ratio:9/16">
+                                <img src="https://picsum.photos/id/1011/200/356" class="w-full h-full object-cover">
                                 <div class="absolute inset-0 flex items-center justify-center">
                                     <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
                                         <i class="fa fa-play"></i>
@@ -683,8 +816,8 @@
                     <div class="bg-white rounded border border-borderGray overflow-hidden">
                         <div class="relative">
                             <input type="checkbox" class="absolute top-1 left-1 z-10">
-                            <div class="h-36 bg-gray-200 flex items-center justify-center">
-                                <img src="https://picsum.photos/id/1041/200/144" class="w-full h-full object-cover">
+                            <div class="w-full bg-gray-200" style="aspect-ratio:9/16">
+                                <img src="https://picsum.photos/id/1041/200/356" class="w-full h-full object-cover">
                                 <div class="absolute inset-0 flex items-center justify-center">
                                     <div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">
                                         <i class="fa fa-play"></i>
@@ -2728,8 +2861,112 @@
         </div>
     </div>
 
+    <!-- 去剧名 + 片尾裁剪 -->
+    <div class="modal-mask" id="renameModal" hidden>
+        <div class="modal-panel w-[980px]">
+            <div class="px-5 py-4 flex items-center justify-between border-b border-borderGray">
+                <div class="text-base text-gray-800 font-medium">去剧名 · 生成无剧名版本</div>
+                <button class="modal-close" data-close-rename>×</button>
+            </div>
+            <div class="flex flex-1 min-h-0">
+                <div class="w-[380px] border-r border-borderGray p-4 flex flex-col min-h-0">
+                    <div class="text-sm text-gray-800 mb-2">批量重命名</div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-xs text-gray-500 shrink-0">后缀</span>
+                        <input type="text" id="renameSuffix" class="form-input h-8 min-w-0" value="_rename" placeholder="_rename">
+                        <button class="btn-sm shrink-0" id="applyRenameBtn">应用</button>
+                    </div>
+                    <div class="text-xs text-gray-400 mb-3">按「原主名 + 后缀」重命名全部素材，应用后仍可逐行修改</div>
+                    <div class="text-sm text-gray-800 mb-2">生成设置</div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xs text-gray-500 shrink-0">生成至</span>
+                        <select id="renameFolder" class="select-full h-8"></select>
+                    </div>
+                    <label class="flex items-center gap-1.5 mb-1 text-xs text-gray-700 cursor-pointer">
+                        <input type="checkbox" id="renameEnding">
+                        <span>添加统一片尾（仅视频）</span>
+                    </label>
+                    <div class="flex items-center gap-2 mb-1 text-xs text-gray-500">
+                        <span id="renameEndingName" class="truncate max-w-[200px]" data-full-name="统一片尾_3s.mp4（3s）">统一片尾_3s.mp4（3s）</span>
+                        <button class="text-primary shrink-0" id="renameEndingUploadBtn">上传自定义</button>
+                        <button class="text-primary shrink-0" id="renameEndingResetBtn" hidden>恢复默认</button>
+                        <input type="file" id="renameEndingFile" accept="video/*" class="hidden">
+                    </div>
+                    <div class="text-xs text-danger mb-3" id="renameEndingHint" hidden></div>
+                    <label class="flex items-center gap-1.5 mb-3 text-xs text-gray-500 cursor-pointer">
+                        <input type="checkbox" id="renameFailMock">
+                        <span>模拟失败（仅演示）</span>
+                    </label>
+                    <div class="text-sm text-gray-800 mb-2">已选 <span id="renameCount" class="text-primary">0</span> 个素材</div>
+                    <div id="renameAssetList" class="flex-1 overflow-y-auto scrollbar-thin flex flex-col gap-2 pr-1"></div>
+                </div>
+                <div class="flex-1 p-4 flex flex-col min-h-0 overflow-y-auto scrollbar-thin">
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="min-w-0">
+                            <div class="text-sm text-gray-800 font-medium" id="renameStageTitle"></div>
+                            <div class="text-xs text-gray-400 mt-0.5" id="renameStageMeta"></div>
+                        </div>
+                        <div class="flex gap-2 shrink-0 ml-2">
+                            <button class="btn-sm" id="renameClearBtn">清空当前</button>
+                            <button class="btn-sm" id="renameApplyAllBtn">应用到全部已选素材</button>
+                        </div>
+                    </div>
+                    <div class="text-xs text-gray-400 mb-2">在封面上按住拖拽画蒙层；拖动蒙层可移动，拖四角可调整大小；可画多块</div>
+                    <div id="maskStage" class="mask-stage"></div>
+                    <div class="mt-3 flex items-center gap-2">
+                        <span class="text-sm text-gray-800">批量裁剪片尾</span>
+                        <input type="number" id="renameBatchTrim" class="form-input h-8 w-24" min="0" step="0.5" value="0">
+                        <span class="text-sm text-gray-600">秒</span>
+                        <button class="btn-sm" id="applyBatchTrimBtn">应用到全部视频</button>
+                        <span class="text-xs text-danger" id="renameBatchTrimHint" hidden></span>
+                    </div>
+                    <div class="mt-1 text-xs text-gray-400">裁剪时长按秒计，需小于素材时长</div>
+                </div>
+            </div>
+            <div class="px-5 py-3 border-t border-borderGray flex items-center justify-end gap-3">
+                <div class="mr-auto text-xs text-danger" id="renameConflict" hidden></div>
+                <button class="btn-footer btn-cancel" data-close-rename>取消</button>
+                <button class="btn-footer btn-primary" id="confirmRenameBtn">生成无剧名版本</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 生成日志 -->
+    <div class="modal-mask" id="genLogModal" hidden>
+        <div class="modal-panel w-[1080px]">
+            <div class="px-5 py-4 flex items-center justify-between border-b border-borderGray">
+                <div class="text-base text-gray-800 font-medium">生成日志</div>
+                <button class="modal-close" data-close-genlog>×</button>
+            </div>
+            <div class="p-5 overflow-y-auto scrollbar-thin">
+                <div class="text-sm text-gray-600 mb-2">本次会话的生成记录（mock，接入后写入生成日志表）</div>
+                <table class="file-table table-fixed">
+                    <thead>
+                        <tr>
+                            <th class="w-[130px]">时间</th>
+                            <th class="w-[115px]">批次</th>
+                            <th class="w-[85px]">状态</th>
+                            <th class="w-[170px]">源素材</th>
+                            <th class="w-[190px]">生成文件</th>
+                            <th class="w-[110px]">目标文件夹</th>
+                            <th class="w-[140px]">操作</th>
+                            <th>标签</th>
+                        </tr>
+                    </thead>
+                    <tbody id="genLogBody"></tbody>
+                </table>
+                <div id="genLogEmpty" class="py-6 text-center text-sm text-gray-400" hidden>暂无生成记录</div>
+            </div>
+            <div class="px-5 py-3 border-t border-borderGray flex justify-end">
+                <button class="btn-footer btn-cancel" data-close-genlog>关闭</button>
+            </div>
+        </div>
+    </div>
+
     <!-- 名称悬停浮层 -->
     <div class="name-tip" id="nameTip" hidden></div>
+    <!-- Toast -->
+    <div class="toast-wrap" id="toastWrap"></div>
 
     <script>
         // ===== Mock 数据（后续接入真实接口时替换） =====
@@ -2782,6 +3019,27 @@
                 { key: 'ai_myaisc', name: '麦芽AI素材' }
             ] }
         ];
+
+        // 批量素材库卡片名称（mock，按 #batchCardGrid 卡片顺序注入；接入真实接口时替换）
+        var MOCK_BATCH_ASSETS = [
+            '546_YUANHUA_EC_TW_N890_260110_MF_MYAISC_自定义.mp4',
+            '547_YUANHUA_EC_TW_N890_260110_FF_AISC_自定义.mp4',
+            '548_YUANHUA_EC_TW_N890_260110_MF_NU_自定义.mp4',
+            '549_YUANHUA_EC_TW_N890_260110_FF_MYAISC_自定义.mp4',
+            '550_YUANHUA_EC_TW_N890_260110_MF_AISC_自定义.mp4',
+            '551_YUANHUA_EC_TW_N890_260110_FF_NU_封面.jpg',
+            '552_YUANHUA_EC_TW_N890_260110_MF_MYAISC_横版.jpg',
+            '553_YUANHUA_EC_TW_N890_260110_FF_AISC_自定义.mp4',
+            '554_YUANHUA_EC_TW_N890_260110_MF_NU_自定义.mp4',
+            '555_YUANHUA_EC_TW_N890_260110_FF_MYAISC_自定义.mp4',
+            '556_YUANHUA_EC_TW_N890_260110_MF_AISC_自定义.mp4',
+            '557_YUANHUA_EC_TW_N890_260110_FF_NU_自定义.mp4'
+        ];
+
+        // 批量素材库当前文件夹与统一片尾（mock，接入真实接口时替换）
+        var BATCH_CURRENT_FOLDER = '麦芽传媒';
+        var MOCK_UNIFIED_ENDING = { name: '统一片尾_3s.mp4', duration: 3 };
+        var MOCK_BATCH_VIDEO_TOTAL = 120;
 
         // ===== 同名判定：去首尾空格 + 忽略大小写，含扩展名 =====
         function normName(name) {
@@ -3636,6 +3894,882 @@
             if (el) { nameTip.hidden = true; }
         });
 
+        // ===== 批量素材库：多选与去剧名 =====
+        var renameModal = document.getElementById('renameModal');
+        var genLogModal = document.getElementById('genLogModal');
+        var renameSelected = [];
+        var renameActive = '';
+        var renameMasks = {};
+        var renameTrim = {};
+        var renameNames = {};
+        var renameOrigMain = {};
+        var maskDrag = null;
+        var MASK_MIN = 10;
+        var RENAME_MAX = 100;
+        var renameLog = [];
+        var renameTasks = [];
+        var renameBatchSeq = 0;
+        var STATUS_LABELS = { queued: '排队中', processing: '处理中', success: '成功', failed: '失败' };
+        var renameEndingSource = {
+            name: MOCK_UNIFIED_ENDING.name,
+            duration: MOCK_UNIFIED_ENDING.duration,
+            custom: false
+        };
+
+        function escapeHtml(text) {
+            return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function batchCards() {
+            return Array.prototype.slice.call(document.querySelectorAll('#batchCardGrid > div'));
+        }
+
+        function batchCardName(card) {
+            return card.getAttribute('data-name') || '';
+        }
+
+        function batchCardKind(card) {
+            return card.getAttribute('data-type') || 'video';
+        }
+
+        function batchCardCover(card) {
+            var img = card.querySelector('img');
+            return img ? img.getAttribute('src') : '';
+        }
+
+        function batchCardDuration(card) {
+            return parseFloat(card.getAttribute('data-duration')) || 0;
+        }
+
+        function batchMainName(name) {
+            var ext = extOf(name);
+            return ext ? name.slice(0, -ext.length) : name;
+        }
+
+        function parseDuration(text) {
+            var parts = String(text || '').split(':');
+            var sec = 0;
+            for (var i = 0; i < parts.length; i++) { sec = sec * 60 + (parseInt(parts[i], 10) || 0); }
+            return sec;
+        }
+
+        function formatDuration(sec) {
+            sec = Math.max(0, Math.round(sec));
+            var h = Math.floor(sec / 3600);
+            var m = Math.floor((sec % 3600) / 60);
+            var s = sec % 60;
+            var mm = (m < 10 ? '0' : '') + m;
+            var ss = (s < 10 ? '0' : '') + s;
+            return h ? h + ':' + mm + ':' + ss : mm + ':' + ss;
+        }
+
+        function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+
+        function nowText() {
+            var d = new Date();
+            return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()) + ' ' +
+                pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+        }
+
+        function dateCompact() {
+            var d = new Date();
+            return '' + d.getFullYear() + pad2(d.getMonth() + 1) + pad2(d.getDate());
+        }
+
+        // 卡片名称/类型/时长统一从 data-* 读，MOCK_BATCH_ASSETS 只负责首次注入
+        function initBatchAssets() {
+            batchCards().forEach(function (card, i) {
+                var kind = card.getAttribute('data-type') || 'video';
+                card.setAttribute('data-type', kind);
+                var name = card.getAttribute('data-name') ||
+                    MOCK_BATCH_ASSETS[i] || ('batch_' + (i + 1) + (kind === 'video' ? '.mp4' : '.jpg'));
+                card.setAttribute('data-name', name);
+                if (kind === 'video' && !card.getAttribute('data-duration')) {
+                    var durEl = card.querySelector('.absolute.bottom-1.right-1');
+                    card.setAttribute('data-duration', parseDuration(durEl ? durEl.textContent : ''));
+                }
+                if (!card.getAttribute('data-material-id')) {
+                    card.setAttribute('data-material-id', 'MAT-' + pad2(i + 1));
+                }
+                var nameEl = card.querySelector('.p-2 .text-purple-600');
+                if (nameEl) { nameEl.textContent = batchMainName(name); }
+            });
+            // 补齐视频卡片，保证能演示单次 100 个的上限（mock，可重复）
+            var videoCount = batchCards().filter(function (card) {
+                return batchCardKind(card) === 'video';
+            }).length;
+            var template = document.querySelector('#batchCardGrid > div');
+            var coverIds = [1005, 1070, 1048, 1027, 1060, 1031, 1041, 1011];
+            var durations = [120, 180, 240, 300];
+            var aiTypes = ['AISC', 'MYAISC', 'NU'];
+            for (var v = videoCount; v < MOCK_BATCH_VIDEO_TOTAL; v++) {
+                var card = template.cloneNode(true);
+                var seq = 600 + v;
+                var name = seq + '_YUANHUA_EC_TW_N890_260110_' + (v % 2 === 0 ? 'FF' : 'MF') +
+                    '_' + aiTypes[v % 3] + '_自定义.mp4';
+                var duration = durations[v % durations.length];
+                card.setAttribute('data-type', 'video');
+                card.setAttribute('data-name', name);
+                card.setAttribute('data-duration', String(duration));
+                card.setAttribute('data-material-id',
+                    'MAT-' + pad2(document.querySelectorAll('#batchCardGrid > div').length + 1));
+                var cover = card.querySelector('img');
+                if (cover) {
+                    cover.setAttribute('src', 'https://picsum.photos/id/' +
+                        coverIds[v % coverIds.length] + '/200/356');
+                }
+                var cardName = card.querySelector('.p-2 .text-purple-600');
+                if (cardName) { cardName.textContent = batchMainName(name); }
+                var cardDur = card.querySelector('.absolute.bottom-1.right-1');
+                if (cardDur) { cardDur.textContent = formatDuration(duration); }
+                var check = card.querySelector('input[type=checkbox]');
+                if (check) { check.checked = false; }
+                document.getElementById('batchCardGrid').appendChild(card);
+            }
+        }
+
+        function updateBatchSelection() {
+            var cards = batchCards();
+            var selected = cards.filter(function (card) {
+                return card.querySelector('input[type=checkbox]').checked;
+            });
+            document.getElementById('batchSelectedCount').textContent = '已选' + selected.length + '个素材';
+            document.getElementById('renameBtn').disabled = selected.length === 0;
+            var visible = cards.filter(function (card) { return !card.hidden; });
+            var visibleChecked = visible.filter(function (card) {
+                return card.querySelector('input[type=checkbox]').checked;
+            });
+            var all = document.getElementById('batchSelectAll');
+            all.disabled = visible.length === 0;
+            all.checked = visible.length > 0 && visibleChecked.length === visible.length;
+            all.indeterminate = visibleChecked.length > 0 && visibleChecked.length < visible.length;
+        }
+
+        function showToast(message, type) {
+            var wrap = document.getElementById('toastWrap');
+            while (wrap.children.length >= 3) { wrap.removeChild(wrap.firstChild); }
+            var kind = type || 'info';
+            var toast = document.createElement('div');
+            toast.className = 'toast toast-' + kind;
+            var icon = kind === 'success' ? 'fa-check-circle text-green-600'
+                : (kind === 'error' ? 'fa-times-circle text-danger'
+                    : (kind === 'info' ? 'fa-clock-o text-primary' : 'fa-exclamation-circle text-orange-500'));
+            toast.innerHTML = '<i class="fa ' + icon + ' mt-0.5"></i>' +
+                '<span class="flex-1">' + escapeHtml(message) + '</span>' +
+                '<i class="fa fa-times text-gray-400 cursor-pointer mt-0.5 toast-close pointer-events-auto"></i>';
+            wrap.appendChild(toast);
+            var timer = setTimeout(function () { removeToast(toast); }, 4000);
+            toast.querySelector('.toast-close').addEventListener('click', function () {
+                clearTimeout(timer);
+                removeToast(toast);
+            });
+        }
+
+        function removeToast(toast) {
+            if (toast.parentNode) { toast.parentNode.removeChild(toast); }
+        }
+
+        function openRenameModal() {
+            maskDrag = null;
+            var allSelected = batchCards().filter(function (card) {
+                return card.querySelector('input[type=checkbox]').checked;
+            });
+            var videos = allSelected.filter(function (card) {
+                return batchCardKind(card) === 'video';
+            });
+            var removed = allSelected.length - videos.length;
+            if (!videos.length) {
+                showToast('去剧名仅支持视频，已移除 ' + removed + ' 个图片素材', 'warning');
+                return;
+            }
+            if (videos.length > RENAME_MAX) {
+                showToast('单次最多处理 ' + RENAME_MAX + ' 个视频，当前选中 ' + videos.length + ' 个，请重选后再试', 'warning');
+                return;
+            }
+            if (removed) {
+                showToast('已移除 ' + removed + ' 个图片素材，仅对 ' + videos.length + ' 个视频执行去剧名', 'warning');
+            }
+            renameSelected = videos;
+            renameMasks = {};
+            renameTrim = {};
+            renameNames = {};
+            renameOrigMain = {};
+            renameSelected.forEach(function (card) {
+                var name = batchCardName(card);
+                var main = batchMainName(name);
+                renameOrigMain[name] = main;
+                renameNames[name] = main + '_rename';
+                renameMasks[name] = [];
+                renameTrim[name] = 0;
+            });
+            renameActive = batchCardName(renameSelected[0]);
+            document.getElementById('renameSuffix').value = '_rename';
+            document.getElementById('renameFolder').value = BATCH_CURRENT_FOLDER;
+            document.getElementById('renameEnding').checked = false;
+            document.getElementById('renameEndingHint').hidden = true;
+            document.getElementById('renameFailMock').checked = false;
+            document.getElementById('renameEndingFile').value = '';
+            renameEndingSource = {
+                name: MOCK_UNIFIED_ENDING.name,
+                duration: MOCK_UNIFIED_ENDING.duration,
+                custom: false
+            };
+            updateEndingInfo();
+            document.getElementById('renameBatchTrim').value = '0';
+            document.getElementById('renameBatchTrimHint').hidden = true;
+            document.getElementById('renameCount').textContent = renameSelected.length;
+            renderRenameModal();
+            renameModal.hidden = false;
+        }
+
+        function renderRenameModal() {
+            renderRenameList();
+            renderRenameStage();
+            refreshRenameValidation();
+        }
+
+        function renderRenameList() {
+            var html = renameSelected.map(function (card) {
+                var key = batchCardName(card);
+                var ext = extOf(key);
+                var masks = renameMasks[key] || [];
+                var trim = renameTrim[key] || 0;
+                var trimPart = '<span>· 裁尾</span><input type="number" class="rename-trim-input" data-trim-input="' +
+                    escapeHtml(key) + '" min="0" step="0.5" value="' + trim + '"><span>秒</span>';
+                var tagKeys = tagsFromName(batchMainName(key));
+                var tagHtml = tagKeys.length
+                    ? tagKeys.map(function (tagKey) {
+                        return '<span class="tag-chip">' + escapeHtml(tagNameOf(tagKey)) + '</span>';
+                    }).join('')
+                    : '<span class="text-xs text-gray-400">未识别</span>';
+                return '<div class="rename-item' + (key === renameActive ? ' active' : '') +
+                    '" data-rename-name="' + escapeHtml(key) + '">' +
+                    '<div class="rename-thumb"><img src="' + escapeHtml(batchCardCover(card)) + '">' +
+                        (masks.length ? '<span class="rename-thumb-badge">' + masks.length + '</span>' : '') +
+                    '</div>' +
+                    '<div class="flex-1 min-w-0">' +
+                        '<div class="flex items-center gap-1">' +
+                            '<input type="text" class="rename-name-input" data-rename-input="' + escapeHtml(key) +
+                                '" value="' + escapeHtml(renameNames[key] || '') + '">' +
+                            '<span class="rename-ext">' + escapeHtml(ext) + '</span>' +
+                        '</div>' +
+                        '<div class="mt-1 flex items-center gap-1.5 text-xs text-gray-400">' +
+                            '<span>视频 · 蒙层 ' + masks.length + ' 块</span>' +
+                            trimPart +
+                        '</div>' +
+                        '<div class="mt-1 flex flex-wrap items-center gap-1">' + tagHtml + '</div>' +
+                        '<div class="rename-row-error" hidden></div>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+            document.getElementById('renameAssetList').innerHTML = html;
+        }
+
+        function findRenameCard(key) {
+            for (var i = 0; i < renameSelected.length; i++) {
+                if (batchCardName(renameSelected[i]) === key) { return renameSelected[i]; }
+            }
+            return null;
+        }
+
+        function maskHtml(regions, editable) {
+            return (regions || []).map(function (r, i) {
+                var handles = editable
+                    ? '<span class="mask-handle" data-handle="nw" data-mask-index="' + i + '"></span>' +
+                        '<span class="mask-handle" data-handle="ne" data-mask-index="' + i + '"></span>' +
+                        '<span class="mask-handle" data-handle="sw" data-mask-index="' + i + '"></span>' +
+                        '<span class="mask-handle" data-handle="se" data-mask-index="' + i + '"></span>'
+                    : '';
+                return '<div class="mask-region' + (editable ? ' is-editable' : '') +
+                    '" data-mask-index="' + i + '" style="left:' + r.x + '%;top:' + r.y + '%;width:' +
+                    r.w + '%;height:' + r.h + '%">' +
+                    (editable ? '<span class="mask-del" data-mask-index="' + i + '">×</span>' : '') +
+                    handles +
+                '</div>';
+            }).join('');
+        }
+
+        function renderRenameStage() {
+            var card = findRenameCard(renameActive);
+            if (!card) { return; }
+            var key = renameActive;
+            var masks = renameMasks[key] || [];
+            document.getElementById('renameStageTitle').textContent = renameNames[key] + extOf(key);
+            document.getElementById('renameStageMeta').textContent =
+                '视频 · 原时长 ' + formatDuration(batchCardDuration(card)) + ' · 已画 ' + masks.length + ' 块蒙层';
+            document.getElementById('maskStage').innerHTML = '<img src="' + escapeHtml(batchCardCover(card)) +
+                '" alt=""><div class="mask-layer">' + maskHtml(masks, true) + '</div>';
+        }
+
+        // 与全库已有素材、本批所有卡片名、本批生成的其他名称比对
+        function renameConflicts() {
+            var keys = renameSelected.map(batchCardName);
+            var generated = keys.map(function (key) { return (renameNames[key] || '').trim() + extOf(key); });
+            var existing = batchCards().map(batchCardName).filter(function (name) { return !!name; });
+            var pending = [];
+            renameTasks.forEach(function (task) {
+                if (task.status === 'queued' || task.status === 'processing') {
+                    task.outputs.forEach(function (out) { pending.push(out.fullName); });
+                }
+            });
+            return keys.filter(function (key, i) {
+                if (!(renameNames[key] || '').trim()) { return true; }
+                var others = generated.filter(function (_, j) { return j !== i; });
+                return isDupName(generated[i], existing.concat(others).concat(pending));
+            });
+        }
+
+        function trimInvalid(card, seconds) {
+            if (isNaN(seconds) || seconds < 0) { return true; }
+            var dur = batchCardDuration(card);
+            return dur > 0 && seconds >= dur;
+        }
+
+        function renameUnready(endingOn) {
+            return renameSelected.filter(function (card) {
+                var key = batchCardName(card);
+                var trim = renameTrim[key] || 0;
+                var trimReady = trim > 0 && !trimInvalid(card, trim);
+                return (renameMasks[key] || []).length === 0 && !trimReady && !endingOn;
+            }).map(batchCardName);
+        }
+
+        function updateEndingInfo() {
+            var text = renameEndingSource.name + '（' + renameEndingSource.duration + 's）';
+            var el = document.getElementById('renameEndingName');
+            el.textContent = text;
+            el.setAttribute('data-full-name', text);
+            document.getElementById('renameEndingResetBtn').hidden = !renameEndingSource.custom;
+        }
+
+        function refreshRenameValidation() {
+            var conflicts = renameConflicts();
+            var endingOn = document.getElementById('renameEnding').checked;
+            var unready = renameUnready(endingOn);
+            var badTrim = renameSelected.filter(function (card) {
+                return trimInvalid(card, renameTrim[batchCardName(card)] || 0);
+            }).map(batchCardName);
+            document.querySelectorAll('#renameAssetList .rename-item').forEach(function (row) {
+                var key = row.getAttribute('data-rename-name');
+                var nameInput = row.querySelector('.rename-name-input');
+                var trimInput = row.querySelector('.rename-trim-input');
+                var err = row.querySelector('.rename-row-error');
+                var msgs = [];
+                if (conflicts.indexOf(key) !== -1) {
+                    msgs.push(!(renameNames[key] || '').trim() ? '名称不能为空' : '与素材库已有素材或本批其他名称重复');
+                }
+                if (badTrim.indexOf(key) !== -1) {
+                    msgs.push('裁剪时长需在 0 ~ ' + formatDuration(batchCardDuration(findRenameCard(key))) + ' 之间');
+                }
+                nameInput.classList.toggle('dup', conflicts.indexOf(key) !== -1);
+                if (trimInput) { trimInput.classList.toggle('dup', badTrim.indexOf(key) !== -1); }
+                err.textContent = msgs.join('；');
+                err.hidden = msgs.length === 0;
+            });
+            var summary = [];
+            if (conflicts.length) { summary.push('有 ' + conflicts.length + ' 个名称冲突或为空'); }
+            if (badTrim.length) { summary.push('有 ' + badTrim.length + ' 个裁剪时长不合法'); }
+            if (unready.length) { summary.push('有 ' + unready.length + ' 个素材还没有任何处理项（蒙层 / 裁剪 / 片尾）'); }
+            var conflictEl = document.getElementById('renameConflict');
+            conflictEl.textContent = summary.length ? summary.join('；') + '，请调整后再生成' : '';
+            conflictEl.hidden = summary.length === 0;
+            document.getElementById('confirmRenameBtn').disabled = summary.length > 0;
+        }
+
+        function appendRenamedCard(card, fullName, mainName, masks, trim, batchId, outputId, endingOn, endingSource) {
+            var endingDuration = endingOn ? endingSource.duration : 0;
+            var newDur = Math.max(0, batchCardDuration(card) - trim + endingDuration);
+            var cover = batchCardCover(card);
+            var dimEl = card.querySelector('.p-2 .text-gray-600');
+            var ownerEl = card.querySelector('.p-2 .bg-tagOrange');
+            var dim = dimEl ? dimEl.textContent : '';
+            var owner = ownerEl ? ownerEl.textContent : '';
+            var tagKeys = tagsFromName(mainName);
+            var tagChips = tagKeys.length
+                ? tagKeys.map(function (tagKey) {
+                    return '<span class="tag-chip">' + escapeHtml(tagNameOf(tagKey)) + '</span>';
+                }).join('')
+                : '<span class="text-xs text-gray-400">未识别</span>';
+            var opsHtml = (trim > 0 ? '<span class="bg-tagOrange px-1 rounded text-xs">裁尾 ' + trim + 's</span>' : '') +
+                (endingOn ? '<span class="bg-tagOrange px-1 rounded text-xs">片尾 +' +
+                    endingSource.duration + 's</span>' : '');
+            var wrap = document.createElement('div');
+            wrap.className = 'bg-white rounded border border-borderGray overflow-hidden';
+            wrap.setAttribute('data-type', 'video');
+            wrap.setAttribute('data-name', fullName);
+            wrap.setAttribute('data-material-id', outputId);
+            wrap.setAttribute('data-source-id', card.getAttribute('data-material-id') || '');
+            wrap.setAttribute('data-source-name', batchCardName(card));
+            wrap.setAttribute('data-batch-id', batchId);
+            wrap.setAttribute('data-tags', tagKeys.join(','));
+            wrap.setAttribute('data-duration', String(newDur));
+            wrap.innerHTML = '<div class="relative">' +
+                '<input type="checkbox" class="absolute top-1 left-1 z-10">' +
+                '<div class="relative bg-gray-200" style="aspect-ratio:9/16">' +
+                    '<img src="' + escapeHtml(cover) + '" class="w-full h-full object-cover">' +
+                    '<div class="mask-layer">' + maskHtml(masks, false) + '</div>' +
+                    '<div class="absolute inset-0 flex items-center justify-center">' +
+                        '<div class="w-8 h-8 rounded-full bg-black/40 text-white flex items-center justify-center">' +
+                            '<i class="fa fa-play"></i></div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="absolute top-1 right-1 bg-tagGreen text-gray-700 px-1 rounded text-xs">去剧名</div>' +
+                '<div class="absolute bottom-1 right-1 bg-black/60 text-white px-1 rounded text-xs">' +
+                    formatDuration(newDur) + '</div>' +
+            '</div>' +
+            '<div class="p-2">' +
+                '<div class="text-xs text-gray-600">' + escapeHtml(dim) + '</div>' +
+                '<div class="text-xs text-purple-600">' + escapeHtml(mainName) + '</div>' +
+                '<div class="mt-1 flex flex-wrap gap-1">' + tagChips + '</div>' +
+                '<div class="mt-2 flex items-center justify-between gap-1 flex-wrap">' +
+                    '<span class="bg-tagOrange px-1 rounded text-xs">' + escapeHtml(owner) + '</span>' +
+                    opsHtml +
+                    '<span class="bg-tagGreen px-1 rounded text-xs">' + nowText() + '</span>' +
+                '</div>' +
+            '</div>';
+            document.getElementById('batchCardGrid').appendChild(wrap);
+        }
+
+        function taskOf(batchId) {
+            for (var i = 0; i < renameTasks.length; i++) {
+                if (renameTasks[i].batchId === batchId) { return renameTasks[i]; }
+            }
+            return null;
+        }
+
+        function updateGenerationStatus() {
+            var task = null;
+            for (var i = renameTasks.length - 1; i >= 0; i--) {
+                if (renameTasks[i].status === 'queued' || renameTasks[i].status === 'processing') {
+                    task = renameTasks[i];
+                    break;
+                }
+            }
+            if (!task) { task = renameTasks[renameTasks.length - 1]; }
+            var wrap = document.getElementById('generationStatus');
+            if (!task) { wrap.hidden = true; return; }
+            wrap.hidden = false;
+            document.getElementById('generationBatch').textContent = task.batchId;
+            var state = document.getElementById('generationState');
+            state.textContent = STATUS_LABELS[task.status] || task.status;
+            state.className = 'gen-status gen-status-' + task.status;
+        }
+
+        function renderGenLog() {
+            var body = document.getElementById('genLogBody');
+            var empty = document.getElementById('genLogEmpty');
+            if (!renameLog.length) {
+                body.innerHTML = '';
+                empty.hidden = false;
+                return;
+            }
+            empty.hidden = true;
+            body.innerHTML = renameLog.slice().reverse().map(function (entry) {
+                var ops = [];
+                if (entry.masks > 0) { ops.push('蒙层 ' + entry.masks + ' 块'); }
+                if (entry.trim > 0) { ops.push('裁尾 ' + entry.trim + 's'); }
+                if (entry.ending) { ops.push('片尾 +' + entry.endingDuration + 's'); }
+                if (!ops.length) { ops.push('无处理项'); }
+                var task = taskOf(entry.batchId);
+                var status = task ? task.status : 'success';
+                var statusText = STATUS_LABELS[status] || status;
+                var tags = entry.tags.length
+                    ? entry.tags.map(function (key) {
+                        return '<span class="tag-chip">' + escapeHtml(tagNameOf(key)) + '</span>';
+                    }).join('')
+                    : '<span class="text-xs text-gray-400">未识别</span>';
+                return '<tr>' +
+                    '<td class="whitespace-nowrap">' + escapeHtml(entry.time) +
+                        '<div class="text-xs text-gray-400">' + escapeHtml(entry.operator) + '</div></td>' +
+                    '<td class="whitespace-nowrap">' + escapeHtml(entry.batchId) + '</td>' +
+                    '<td class="whitespace-nowrap"><span class="gen-status gen-status-' + status + '">' +
+                        escapeHtml(statusText) + '</span>' +
+                        (status === 'failed' && task && task.error
+                            ? '<div class="mt-1 text-xs text-danger">' + escapeHtml(task.error) + '</div>' : '') +
+                    '</td>' +
+                    '<td><div class="max-w-[170px] truncate" data-full-name="' + escapeHtml(entry.sourceName) + '">' +
+                        escapeHtml(entry.sourceName) + '</div>' +
+                        '<div class="text-xs text-gray-400">' + escapeHtml(entry.sourceId) + '</div></td>' +
+                    '<td><div class="max-w-[190px] truncate" data-full-name="' + escapeHtml(entry.outputName) + '">' +
+                        escapeHtml(entry.outputName) + '</div>' +
+                        '<div class="text-xs text-gray-400">' + escapeHtml(entry.outputId) + '</div></td>' +
+                    '<td class="whitespace-nowrap">' + escapeHtml(entry.folder) + '</td>' +
+                    '<td>' + escapeHtml(ops.join(' · ')) +
+                        (entry.ending ? '<div class="text-xs text-gray-400 max-w-[140px] truncate" data-full-name="' +
+                            escapeHtml(entry.endingName) + '">' + escapeHtml(entry.endingName) + '</div>' : '') +
+                    '</td>' +
+                    '<td><div class="flex flex-wrap gap-1">' + tags + '</div></td>' +
+                '</tr>';
+            }).join('');
+        }
+
+        function finishGeneration(task) {
+            if (task.simulateFail) {
+                task.status = 'failed';
+                task.error = '转码服务返回错误（演示）';
+                updateGenerationStatus();
+                if (!genLogModal.hidden) { renderGenLog(); }
+                showToast('生成失败：' + task.error, 'error');
+                return;
+            }
+            task.status = 'success';
+            task.outputs.forEach(function (out) {
+                if (task.sameFolder) {
+                    appendRenamedCard(out.card, out.fullName, out.mainName, out.masks, out.trim,
+                        task.batchId, out.outputId, task.endingOn, task.endingSource);
+                }
+                out.card.querySelector('input[type=checkbox]').checked = false;
+            });
+            updateBatchSelection();
+            updateGenerationStatus();
+            if (!genLogModal.hidden) { renderGenLog(); }
+            showToast('生成成功：' + task.outputs.length + ' 个无剧名版本，存放至 ' + task.targetFolder, 'success');
+        }
+
+        function confirmRename() {
+            var conflicts = renameConflicts();
+            var endingOn = document.getElementById('renameEnding').checked;
+            var badTrim = renameSelected.filter(function (card) {
+                return trimInvalid(card, renameTrim[batchCardName(card)] || 0);
+            });
+            var unready = renameUnready(endingOn);
+            if (conflicts.length || badTrim.length || unready.length) {
+                refreshRenameValidation();
+                return;
+            }
+            var targetFolder = document.getElementById('renameFolder').value;
+            var endingSource = {
+                name: renameEndingSource.name,
+                duration: renameEndingSource.duration
+            };
+            var sameFolder = targetFolder === BATCH_CURRENT_FOLDER;
+            var simulateFail = document.getElementById('renameFailMock').checked;
+            renameBatchSeq += 1;
+            var batchId = 'RB' + dateCompact() + '-' + pad2(renameBatchSeq);
+            var createdAt = nowText();
+            var task = {
+                batchId: batchId,
+                status: 'queued',
+                targetFolder: targetFolder,
+                sameFolder: sameFolder,
+                endingOn: endingOn,
+                endingSource: endingSource,
+                simulateFail: simulateFail,
+                error: '',
+                outputs: []
+            };
+            renameSelected.forEach(function (card, i) {
+                var key = batchCardName(card);
+                var main = renameNames[key].trim();
+                var fullName = main + extOf(key);
+                var outputId = 'MAT-' + batchId + '-' + pad2(i + 1);
+                var masks = (renameMasks[key] || []).map(function (r) {
+                    return { x: r.x, y: r.y, w: r.w, h: r.h };
+                });
+                var trim = renameTrim[key] || 0;
+                var tags = tagsFromName(main);
+                task.outputs.push({
+                    card: card,
+                    fullName: fullName,
+                    mainName: main,
+                    masks: masks,
+                    trim: trim,
+                    outputId: outputId
+                });
+                renameLog.push({
+                    time: createdAt,
+                    operator: '当前用户',
+                    batchId: batchId,
+                    sourceId: card.getAttribute('data-material-id') || '',
+                    sourceName: key,
+                    outputId: outputId,
+                    outputName: fullName,
+                    folder: targetFolder,
+                    masks: masks.length,
+                    trim: trim,
+                    ending: endingOn,
+                    endingName: endingOn ? endingSource.name : '',
+                    endingDuration: endingOn ? endingSource.duration : 0,
+                    tags: tags
+                });
+            });
+            renameTasks.push(task);
+            renameModal.hidden = true;
+            updateGenerationStatus();
+            if (!genLogModal.hidden) { renderGenLog(); }
+            showToast('已提交生成任务 ' + batchId + '，排队中', 'info');
+            setTimeout(function () {
+                task.status = 'processing';
+                updateGenerationStatus();
+                if (!genLogModal.hidden) { renderGenLog(); }
+            }, 800);
+            setTimeout(function () { finishGeneration(task); }, 3200);
+        }
+
+        // ===== 去剧名：事件绑定 =====
+        document.getElementById('batchCardGrid').addEventListener('change', function (e) {
+            if (e.target && e.target.type === 'checkbox') { updateBatchSelection(); }
+        });
+        document.getElementById('batchSelectAll').addEventListener('change', function () {
+            var checked = this.checked;
+            batchCards().forEach(function (card) {
+                if (!card.hidden) { card.querySelector('input[type=checkbox]').checked = checked; }
+            });
+            updateBatchSelection();
+        });
+        document.getElementById('renameBtn').addEventListener('click', openRenameModal);
+        document.querySelectorAll('[data-close-rename]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                maskDrag = null;
+                renameModal.hidden = true;
+            });
+        });
+        document.getElementById('renameAssetList').addEventListener('input', function (e) {
+            var target = e.target;
+            if (target.classList.contains('rename-name-input')) {
+                var key = target.getAttribute('data-rename-input');
+                renameNames[key] = target.value;
+                if (key === renameActive) {
+                    document.getElementById('renameStageTitle').textContent = target.value + extOf(key);
+                }
+                refreshRenameValidation();
+                return;
+            }
+            if (target.classList.contains('rename-trim-input')) {
+                var trimKey = target.getAttribute('data-trim-input');
+                var val = parseFloat(target.value);
+                renameTrim[trimKey] = isNaN(val) ? 0 : val;
+                refreshRenameValidation();
+            }
+        });
+        document.getElementById('renameAssetList').addEventListener('click', function (e) {
+            var row = e.target.closest && e.target.closest('.rename-item');
+            if (!row) { return; }
+            var key = row.getAttribute('data-rename-name');
+            if (key === renameActive) { return; }
+            renameActive = key;
+            document.querySelectorAll('#renameAssetList .rename-item').forEach(function (el) {
+                el.classList.toggle('active', el === row);
+            });
+            renderRenameStage();
+        });
+        document.getElementById('maskStage').addEventListener('mousedown', function (e) {
+            if (e.button !== 0 || !renameActive) { return; }
+            if (e.target.closest && e.target.closest('.mask-del')) { return; }
+            var rect = this.getBoundingClientRect();
+            var x = Math.min(Math.max(e.clientX - rect.left, 0), rect.width);
+            var y = Math.min(Math.max(e.clientY - rect.top, 0), rect.height);
+            var handle = e.target.closest && e.target.closest('.mask-handle');
+            var region = e.target.closest && e.target.closest('.mask-region.is-editable');
+            var idx = handle ? parseInt(handle.getAttribute('data-mask-index'), 10)
+                : (region ? parseInt(region.getAttribute('data-mask-index'), 10) : -1);
+            var source = idx >= 0 ? (renameMasks[renameActive] || [])[idx] : null;
+            if (source) {
+                maskDrag = {
+                    mode: handle ? 'resize' : 'move',
+                    corner: handle ? handle.getAttribute('data-handle') : '',
+                    index: idx,
+                    el: region,
+                    rect: rect,
+                    x0: x,
+                    y0: y,
+                    orig: {
+                        left: source.x / 100 * rect.width,
+                        top: source.y / 100 * rect.height,
+                        width: source.w / 100 * rect.width,
+                        height: source.h / 100 * rect.height
+                    },
+                    last: null
+                };
+                e.preventDefault();
+                return;
+            }
+            var el = document.createElement('div');
+            el.className = 'mask-region mask-drawing';
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
+            el.style.width = '0';
+            el.style.height = '0';
+            this.appendChild(el);
+            maskDrag = {
+                mode: 'draw', el: el, rect: rect, x0: x, y0: y,
+                stageW: rect.width, stageH: rect.height, last: null
+            };
+            e.preventDefault();
+        });
+        document.addEventListener('mousemove', function (e) {
+            if (!maskDrag) { return; }
+            var drag = maskDrag;
+            var cx = Math.min(Math.max(e.clientX - drag.rect.left, 0), drag.rect.width);
+            var cy = Math.min(Math.max(e.clientY - drag.rect.top, 0), drag.rect.height);
+            var left;
+            var top;
+            if (drag.mode === 'draw') {
+                left = Math.min(drag.x0, cx);
+                top = Math.min(drag.y0, cy);
+                drag.el.style.left = left + 'px';
+                drag.el.style.top = top + 'px';
+                drag.el.style.width = Math.abs(cx - drag.x0) + 'px';
+                drag.el.style.height = Math.abs(cy - drag.y0) + 'px';
+                drag.last = { left: left, top: top, w: Math.abs(cx - drag.x0), h: Math.abs(cy - drag.y0) };
+                return;
+            }
+            if (drag.mode === 'move') {
+                left = Math.min(Math.max(drag.orig.left + cx - drag.x0, 0), drag.rect.width - drag.orig.width);
+                top = Math.min(Math.max(drag.orig.top + cy - drag.y0, 0), drag.rect.height - drag.orig.height);
+                drag.el.style.left = left + 'px';
+                drag.el.style.top = top + 'px';
+                drag.el.style.width = drag.orig.width + 'px';
+                drag.el.style.height = drag.orig.height + 'px';
+                drag.last = { left: left, top: top, w: drag.orig.width, h: drag.orig.height };
+                return;
+            }
+            var right = drag.orig.left + drag.orig.width;
+            var bottom = drag.orig.top + drag.orig.height;
+            left = drag.orig.left;
+            top = drag.orig.top;
+            if (drag.corner.indexOf('w') !== -1) { left = Math.min(Math.max(cx, 0), right - MASK_MIN); }
+            if (drag.corner.indexOf('e') !== -1) { right = Math.max(Math.min(cx, drag.rect.width), left + MASK_MIN); }
+            if (drag.corner.indexOf('n') !== -1) { top = Math.min(Math.max(cy, 0), bottom - MASK_MIN); }
+            if (drag.corner.indexOf('s') !== -1) { bottom = Math.max(Math.min(cy, drag.rect.height), top + MASK_MIN); }
+            drag.el.style.left = left + 'px';
+            drag.el.style.top = top + 'px';
+            drag.el.style.width = (right - left) + 'px';
+            drag.el.style.height = (bottom - top) + 'px';
+            drag.last = { left: left, top: top, w: right - left, h: bottom - top };
+        });
+        document.addEventListener('mouseup', function () {
+            if (!maskDrag) { return; }
+            var drag = maskDrag;
+            maskDrag = null;
+            if (drag.mode === 'draw' && drag.el.parentNode) { drag.el.parentNode.removeChild(drag.el); }
+            if (!drag.last || drag.last.w < 8 || drag.last.h < 8 || !renameActive) { return; }
+            var region = {
+                x: Math.round(drag.last.left / drag.rect.width * 10000) / 100,
+                y: Math.round(drag.last.top / drag.rect.height * 10000) / 100,
+                w: Math.round(drag.last.w / drag.rect.width * 10000) / 100,
+                h: Math.round(drag.last.h / drag.rect.height * 10000) / 100
+            };
+            if (drag.mode === 'draw') {
+                renameMasks[renameActive].push(region);
+            } else if (renameMasks[renameActive][drag.index]) {
+                renameMasks[renameActive][drag.index] = region;
+            } else {
+                return;
+            }
+            renderRenameModal();
+        });
+        document.getElementById('maskStage').addEventListener('click', function (e) {
+            var del = e.target.closest && e.target.closest('.mask-del');
+            if (!del) { return; }
+            var idx = parseInt(del.getAttribute('data-mask-index'), 10);
+            renameMasks[renameActive].splice(idx, 1);
+            renderRenameModal();
+        });
+        document.getElementById('renameClearBtn').addEventListener('click', function () {
+            if (!renameActive) { return; }
+            renameMasks[renameActive] = [];
+            renderRenameModal();
+        });
+        document.getElementById('renameApplyAllBtn').addEventListener('click', function () {
+            if (!renameActive) { return; }
+            var src = renameMasks[renameActive].map(function (r) {
+                return { x: r.x, y: r.y, w: r.w, h: r.h };
+            });
+            renameSelected.forEach(function (card) {
+                renameMasks[batchCardName(card)] = src.map(function (r) {
+                    return { x: r.x, y: r.y, w: r.w, h: r.h };
+                });
+            });
+            renderRenameModal();
+        });
+        document.getElementById('applyBatchTrimBtn').addEventListener('click', function () {
+            var input = document.getElementById('renameBatchTrim');
+            var hint = document.getElementById('renameBatchTrimHint');
+            var val = parseFloat(input.value);
+            if (isNaN(val) || val < 0) {
+                hint.textContent = '请输入不小于 0 的秒数';
+                hint.hidden = false;
+                return;
+            }
+            hint.hidden = true;
+            renameSelected.forEach(function (card) {
+                if (batchCardKind(card) === 'video') { renameTrim[batchCardName(card)] = val; }
+            });
+            renderRenameModal();
+        });
+        document.getElementById('applyRenameBtn').addEventListener('click', function () {
+            var suffix = document.getElementById('renameSuffix').value;
+            renameSelected.forEach(function (card) {
+                var key = batchCardName(card);
+                renameNames[key] = renameOrigMain[key] + suffix;
+            });
+            renderRenameModal();
+        });
+        document.getElementById('confirmRenameBtn').addEventListener('click', confirmRename);
+        document.getElementById('renameEnding').addEventListener('change', refreshRenameValidation);
+        document.getElementById('renameEndingUploadBtn').addEventListener('click', function () {
+            document.getElementById('renameEndingFile').click();
+        });
+        document.getElementById('renameEndingResetBtn').addEventListener('click', function () {
+            renameEndingSource = {
+                name: MOCK_UNIFIED_ENDING.name,
+                duration: MOCK_UNIFIED_ENDING.duration,
+                custom: false
+            };
+            updateEndingInfo();
+            document.getElementById('renameEndingHint').hidden = true;
+            refreshRenameValidation();
+        });
+        document.getElementById('renameEndingFile').addEventListener('change', function () {
+            var input = this;
+            var file = input.files && input.files[0];
+            if (!file) { return; }
+            var hint = document.getElementById('renameEndingHint');
+            var url = URL.createObjectURL(file);
+            var video = document.createElement('video');
+            var done = false;
+            function apply(duration, fallback) {
+                if (done) { return; }
+                done = true;
+                renameEndingSource = { name: file.name, duration: duration, custom: true };
+                updateEndingInfo();
+                hint.textContent = fallback ? '未能读取片尾时长，按 ' + MOCK_UNIFIED_ENDING.duration + ' 秒计' : '';
+                hint.hidden = !fallback;
+                URL.revokeObjectURL(url);
+                input.value = '';
+                refreshRenameValidation();
+            }
+            video.preload = 'metadata';
+            video.onloadedmetadata = function () {
+                var seconds = video.duration;
+                var ok = isFinite(seconds) && seconds > 0;
+                apply(ok ? Math.round(seconds * 10) / 10 : MOCK_UNIFIED_ENDING.duration, !ok);
+            };
+            video.onerror = function () { apply(MOCK_UNIFIED_ENDING.duration, true); };
+            video.src = url;
+        });
+        document.getElementById('renameLogBtn').addEventListener('click', function () {
+            renderGenLog();
+            genLogModal.hidden = false;
+        });
+        document.querySelectorAll('[data-close-genlog]').forEach(function (btn) {
+            btn.addEventListener('click', function () { genLogModal.hidden = true; });
+        });
+
+        function initRenameFolders() {
+            var sel = document.getElementById('renameFolder');
+            var seen = {};
+            var html = '';
+            [BATCH_CURRENT_FOLDER].concat(MOCK_AI_FOLDERS).forEach(function (folder) {
+                if (seen[folder]) { return; }
+                seen[folder] = true;
+                html += '<option value="' + escapeHtml(folder) + '">' + escapeHtml(folder) + '</option>';
+            });
+            sel.innerHTML = html;
+            sel.value = BATCH_CURRENT_FOLDER;
+        }
+
         // ===== 批量素材库：素材形式筛选 =====
         (function initBatchFormFilter() {
             var sel = document.getElementById('batchFormFilter');
@@ -3647,9 +4781,13 @@
                     var type = card.getAttribute('data-type') || 'video';
                     card.hidden = form !== 'all' && type !== form;
                 });
+                updateBatchSelection();
             });
         })();
 
+        initBatchAssets();
+        updateBatchSelection();
+        initRenameFolders();
         filterAiCards();
         initSelects();
         refreshDupMarks();
