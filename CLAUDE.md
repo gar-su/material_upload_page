@@ -44,7 +44,7 @@ Tailwind CDN + `<style type="text/tailwindcss">` 的 `@layer utilities` / `@laye
 - `aiSelected`：AI素材库当前勾选的 checkbox 数组，每次由 `updateAiSelection()` 从 DOM 重算。它是**跨筛选、跨页**的——筛选与分页只改 `card.hidden` 从不碰勾选，所以被筛掉、翻到别页的选中项仍留在其中，右侧已选栏与同步链路都以它为准。
 - `aiPage` / `aiPageSize`：AI素材库的当前页码（1 起）与每页条数（默认 10）。筛选条件或每页条数变更时 `aiPage` 一律回到 1；渲染统一走 `filterAiCards()` → `renderAiPage()`。
 
-另有 `uploadRowSeq` / `uploadFileCursor` 两个计数器，只服务于动态追加文件行，不承载业务状态；`tagEditRows` / `tagInitial` / `tagPending` / `tagActiveGroup` 是「修改标签」弹窗的临时编辑态，仅在一次弹窗会话内有效。`renameSelected` / `renameActive` / `renameMasks` / `renameTrim` / `renameNames` / `renameOrigMain` 是「去剧名」弹窗的会话态，分别持有已选视频卡片、当前编辑卡片、各素材蒙层百分比数组、裁剪时长、新主名与原主名，关闭弹窗即作废；`renameLog` / `renameBatchSeq` 是生成日志的会话态，前者按输出文件存日志明细，后者生成批次序号，刷新页面即清空；`renameTasks` 保存每个生成批次的排队中 / 处理中 / 成功 / 失败状态，日志按 `batchId` 关联任务状态；`renameEndingSource` 是当前片尾素材（名称、时长、是否自定义），打开弹窗时重置为默认统一片尾。素材名称的冲突判定不设状态，一律由 `collectDupRows()` 从 DOM 现算；素材标签同样以 DOM 为准，逐行写在 `data-tags` 上，文件名解析、行内编辑与批量增删都只改这些属性。
+另有 `uploadRowSeq` / `uploadFileCursor` 两个计数器，只服务于动态追加文件行，不承载业务状态；`tagEditRows` / `tagInitial` / `tagPending` / `tagActiveGroup` 是「修改标签」弹窗的临时编辑态，仅在一次弹窗会话内有效。`renameSelected` / `renameActive` / `renameMasks` / `renameTrim` / `renameNames` / `renameOrigMain` 是「去剧名」弹窗的会话态，分别持有已选视频卡片、当前编辑卡片、各素材蒙层百分比数组、裁剪时长、新主名与原主名，关闭弹窗即作废；`renameLog` / `renameBatchSeq` 是批量去剧名日志的会话态，前者按输出文件存日志明细，后者生成批次序号，刷新页面即清空；`renameTasks` 保存每个生成批次的排队中 / 处理中 / 成功 / 失败状态，日志按 `batchId` 关联任务状态；`renameEndingSource` 是当前片尾素材（名称、时长、是否自定义），打开弹窗时重置为默认统一片尾。素材名称的冲突判定不设状态，一律由 `collectDupRows()` 从 DOM 现算；素材标签同样以 DOM 为准，逐行写在 `data-tags` 上，文件名解析、行内编辑与批量增删都只改这些属性。
 
 数据属性是 DOM 与逻辑之间的契约：
 
@@ -66,9 +66,9 @@ Tailwind CDN + `<style type="text/tailwindcss">` 的 `@layer utilities` / `@laye
 - `#maskStage` —— 蒙层绘制画布；蒙层按 `{x,y,w,h}` 百分比存于 `renameMasks`，拖动蒙层移动，拖 `.mask-handle[data-handle="nw|ne|sw|se"]` 调整大小，`.mask-del[data-mask-index]` 删除单块。
 - `#renameSuffix` + `#applyRenameBtn` —— 统一后缀批量改名；`#renameBatchTrim` + `#applyBatchTrimBtn` —— 批量裁剪片尾（只写视频）。
 - `#renameFolder` —— 生成至的目标文件夹（默认当前文件夹）；`#renameEnding` + `#renameEndingName` + `#renameEndingUploadBtn` / `#renameEndingFile` / `#renameEndingResetBtn` —— 统一片尾开关、自定义片尾上传与恢复默认，文件名/时长写入 `renameEndingSource`。
-- `#generationStatus` / `#generationBatch` / `#generationState` —— 页面「最近任务」状态胶囊；`.gen-status-queued|processing|success|failed` 为状态样式；`#renameFailMock` 是原型演示失败开关。
+- `#renameFailMock` —— 原型演示失败开关；`.gen-status-queued|processing|success|failed` 用于批量去剧名日志状态列，首页不再展示「最近任务」胶囊。
 - 生成是异步模拟：`confirmRename()` 创建 `renameTasks` 任务（排队中），800ms 后转处理中，3.2s 后成功 / 失败；成功才由 `appendRenamedCard()` 落卡片并清空参与视频勾选，失败保留勾选并在日志记录原因。`renderGenLog()` 按 `batchId` 取任务状态，状态列展示排队中 / 处理中 / 成功 / 失败，失败附原因。
-- `#genLogModal` / `#genLogBody` —— 生成日志弹窗，由 `#renameLogBtn` 打开；每条明细含 batch_id、源 / 输出素材 ID、目标文件夹、操作与标签。
+- `#genLogModal` / `#genLogBody` —— 批量去剧名日志弹窗，由 `#renameLogBtn` 打开；每条明细含 batch_id、源 / 输出素材 ID、目标文件夹、操作与标签。
 - 生成卡片额外带 `data-material-id` / `data-source-id` / `data-source-name` / `data-batch-id` / `data-tags`，是源素材与输出素材的关联契约。
 - `#confirmRenameBtn` —— 生成入口，禁用态由 `refreshRenameValidation()` 依据空名 / 重名 / 裁剪非法 / 未就绪统一计算；点击后提交异步任务，不立即生成卡片。
 
@@ -99,8 +99,8 @@ Tailwind CDN + `<style type="text/tailwindcss">` 的 `@layer utilities` / `@laye
 | `未绑定素材自动绑定需求文档.md` | 后端定时任务补绑 | 无前端改动（明确要求 upload 页零改动） |
 | `素材命名与标签自动填充需求文档.md` | 新命名规则、上传标签自动填充、素材维度标签与批量设置、近一个月数据清洗 | `#tagModal`、`#uploadFileBody tr[data-tags]`、`.row-tag-edit`、`#batchTagBtn`、`tagsFromName()` / `setRowTags()` / `renderRowTags()` / `openTagModal()` / `renderTagModal()` / `applyTagModal()` / `updateBatchTagBtn()` |
 | `重名素材拦截需求文档.md` | 素材名全库唯一的判定口径、两个入口（上传页 / AI素材库同步）的拦截与查名接口 | 同上两处，判定口径的唯一权威来源 |
-| `去剧名需求文档.md` | 视频批量多选去剧名、蒙层绘制与调整、片尾裁剪、统一片尾（含自定义上传）、跨文件夹生成、标签识别、生成任务状态、生成日志与关联关系 | `#renameBtn` / `#renameModal` / `#genLogModal`、`updateBatchSelection()` / `openRenameModal()` / `maskHtml()` / `refreshRenameValidation()` / `appendRenamedCard()` / `confirmRename()` / `finishGeneration()` / `updateGenerationStatus()` / `renderGenLog()` |
+| `去剧名需求文档.md` | 视频批量多选去剧名、蒙层绘制与调整、片尾裁剪、统一片尾（含自定义上传）、跨文件夹生成、标签识别、生成任务状态、批量去剧名日志与关联关系 | `#renameBtn` / `#renameModal` / `#genLogModal`、`updateBatchSelection()` / `openRenameModal()` / `maskHtml()` / `refreshRenameValidation()` / `appendRenamedCard()` / `confirmRename()` / `finishGeneration()` / `renderGenLog()` |
 
 文档中的「待确认项（Q1–Q16）」「已确认决策」「范围外」「不涉及」章节是范围边界，改动超出已验证条目时先回到文档确认。
 
-代码中无 handler 的元素（如 `#page-batch` 的 `.del-btn`、批量操作按钮组中除「去剧名」「生成日志」外的按钮、`#page-batch` 筛选栏中除素材形式外的下拉）是原型占位，未被任何 JS 引用；不要因为「看起来该有行为」就顺手补上。
+代码中无 handler 的元素（如 `#page-batch` 的 `.del-btn`、批量操作按钮组中除「去剧名」「批量去剧名日志」外的按钮、`#page-batch` 筛选栏中除素材形式外的下拉）是原型占位，未被任何 JS 引用；不要因为「看起来该有行为」就顺手补上。

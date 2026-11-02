@@ -543,7 +543,7 @@
                     <button class="border border-borderGray rounded px-3 py-1">设置权限</button>
                     <button class="border border-borderGray rounded px-3 py-1">批量下载</button>
                     <button id="renameBtn" class="border border-borderGray rounded px-3 py-1 disabled:opacity-50 disabled:cursor-not-allowed" disabled>去剧名</button>
-                    <button id="renameLogBtn" class="border border-borderGray rounded px-3 py-1">生成日志</button>
+                    <button id="renameLogBtn" class="border border-borderGray rounded px-3 py-1">批量去剧名日志</button>
                     <button class="border border-borderGray rounded px-3 py-1">批量设置标签</button>
                     <button class="border border-borderGray rounded px-3 py-1">批量设置短剧</button>
                     <button class="border border-borderGray rounded px-3 py-1">批量转移素材</button>
@@ -557,11 +557,6 @@
                 <input type="checkbox" id="batchSelectAll"> <span class="ml-1">全选</span>
                 <span id="batchSelectedCount" class="ml-2">已选0个素材</span>
                 <span class="ml-2">麦芽传媒（共2134559个素材）</span>
-                <span id="generationStatus" class="ml-2 inline-flex items-center gap-1" hidden>
-                    <span class="text-gray-500">最近任务</span>
-                    <span id="generationBatch" class="text-gray-700"></span>
-                    <span id="generationState" class="gen-status gen-status-queued">排队中</span>
-                </span>
             </div>
             <!-- 素材卡片网格 -->
             <div class="flex-1 overflow-y-auto scrollbar-thin p-4">
@@ -2931,15 +2926,15 @@
         </div>
     </div>
 
-    <!-- 生成日志 -->
+    <!-- 批量去剧名日志 -->
     <div class="modal-mask" id="genLogModal" hidden>
         <div class="modal-panel w-[1080px]">
             <div class="px-5 py-4 flex items-center justify-between border-b border-borderGray">
-                <div class="text-base text-gray-800 font-medium">生成日志</div>
+                <div class="text-base text-gray-800 font-medium">批量去剧名日志</div>
                 <button class="modal-close" data-close-genlog>×</button>
             </div>
             <div class="p-5 overflow-y-auto scrollbar-thin">
-                <div class="text-sm text-gray-600 mb-2">本次会话的生成记录（mock，接入后写入生成日志表）</div>
+                <div class="text-sm text-gray-600 mb-2">本次会话的批量去剧名记录（mock，接入后写入日志表）</div>
                 <table class="file-table table-fixed">
                     <thead>
                         <tr>
@@ -2955,7 +2950,7 @@
                     </thead>
                     <tbody id="genLogBody"></tbody>
                 </table>
-                <div id="genLogEmpty" class="py-6 text-center text-sm text-gray-400" hidden>暂无生成记录</div>
+                <div id="genLogEmpty" class="py-6 text-center text-sm text-gray-400" hidden>暂无批量去剧名记录</div>
             </div>
             <div class="px-5 py-3 border-t border-borderGray flex justify-end">
                 <button class="btn-footer btn-cancel" data-close-genlog>关闭</button>
@@ -4337,24 +4332,6 @@
             return null;
         }
 
-        function updateGenerationStatus() {
-            var task = null;
-            for (var i = renameTasks.length - 1; i >= 0; i--) {
-                if (renameTasks[i].status === 'queued' || renameTasks[i].status === 'processing') {
-                    task = renameTasks[i];
-                    break;
-                }
-            }
-            if (!task) { task = renameTasks[renameTasks.length - 1]; }
-            var wrap = document.getElementById('generationStatus');
-            if (!task) { wrap.hidden = true; return; }
-            wrap.hidden = false;
-            document.getElementById('generationBatch').textContent = task.batchId;
-            var state = document.getElementById('generationState');
-            state.textContent = STATUS_LABELS[task.status] || task.status;
-            state.className = 'gen-status gen-status-' + task.status;
-        }
-
         function renderGenLog() {
             var body = document.getElementById('genLogBody');
             var empty = document.getElementById('genLogEmpty');
@@ -4407,7 +4384,6 @@
             if (task.simulateFail) {
                 task.status = 'failed';
                 task.error = '转码服务返回错误（演示）';
-                updateGenerationStatus();
                 if (!genLogModal.hidden) { renderGenLog(); }
                 showToast('生成失败：' + task.error, 'error');
                 return;
@@ -4421,9 +4397,9 @@
                 out.card.querySelector('input[type=checkbox]').checked = false;
             });
             updateBatchSelection();
-            updateGenerationStatus();
             if (!genLogModal.hidden) { renderGenLog(); }
-            showToast('生成成功：' + task.outputs.length + ' 个无剧名版本，存放至 ' + task.targetFolder, 'success');
+            var extra = task.sameFolder ? '' : '；跨文件夹结果可在「批量去剧名日志」查看';
+            showToast('生成成功：' + task.outputs.length + ' 个无剧名版本，存放至 ' + task.targetFolder + extra, 'success');
         }
 
         function confirmRename() {
@@ -4495,12 +4471,10 @@
             });
             renameTasks.push(task);
             renameModal.hidden = true;
-            updateGenerationStatus();
             if (!genLogModal.hidden) { renderGenLog(); }
             showToast('已提交生成任务 ' + batchId + '，排队中', 'info');
             setTimeout(function () {
                 task.status = 'processing';
-                updateGenerationStatus();
                 if (!genLogModal.hidden) { renderGenLog(); }
             }, 800);
             setTimeout(function () { finishGeneration(task); }, 3200);
